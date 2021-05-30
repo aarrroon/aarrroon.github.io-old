@@ -5,8 +5,10 @@ let day = today.getDate();
 let month = today.getMonth();
 let ref = document.getElementById("daysTillNextAnniversary");
 let specialDayRef = document.getElementById("specialDay");
+let firstDateRef = document.getElementById("firstDate");
 let daysLeft = -1;
-const SPECIAL_DAY = new Date("22/12/2020");
+const SPECIAL_DAY = new Date("22 December 2020");
+const FIRST_DATE = new Date("28 October 2020");
 const MILLISECONDS_IN_DAY = 1000*60*60*24;
 
 
@@ -53,8 +55,9 @@ function daysTillNextAnniversary()
 daysTillNextAnniversary();
 ref.innerText = daysLeft;
 
-function betweenTwoDates(firstDate, secondDate)
+function betweenTwoDates(firstDate, secondDate,ref)
 {
-    specialDayRef.innerText = (secondDate.getTime() - firstDate.getTime())/MILLISECONDS_IN_DAY;
+    ref.innerText = Math.floor((secondDate.getTime() - firstDate.getTime())/MILLISECONDS_IN_DAY);
 }
-betweenTwoDates(SPECIAL_DAY,today);
+betweenTwoDates(SPECIAL_DAY,today,specialDayRef);
+betweenTwoDates(FIRST_DATE,today,firstDateRef);

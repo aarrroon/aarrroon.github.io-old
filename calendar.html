@@ -16,8 +16,6 @@
 <body>
     <!-- Uses a transparent header that draws on top of the layout's background -->
     <style>
-      
-
         #white {
             color: white;
             font-weight: bold;
@@ -36,9 +34,11 @@
             background-color: rgba(255, 255, 255, 0.4);
             resize: none;
         }
+
         #daysTillNextAnniversary {
             font-size: 20px;
         }
+
         #textboxHeader {
             font: 20px cursive;
             font-weight: bold;
@@ -72,19 +72,24 @@
         <main class="mdl-layout__content">
             <div class="mdl-grid">
                 <div class="mdl-cell mdl-cell--4-col">
-                    <div class="cards" >
+                    <div class="cards">
                         <span id="textboxHeader"><u>Days Until Next Anniversary</u></span>
                         <div id="daysTillNextAnniversary"></div>
                     </div>
-                    
+
                 </div>
                 <div class="mdl-cell mdl-cell--4-col">
-                    <div class="cards" >
-                        <span id="textboxHeader"><u>Special Day</u></span>
+                    <div class="cards">
+                        <span id="textboxHeader"><u>How Long We Have Been Together</u></span>
                         <div id="specialDay"></div>
                     </div>
                 </div>
-                <div class="mdl-cell mdl-cell--4-col"></div>
+                <div class="mdl-cell mdl-cell--4-col">
+                    <div class="cards">
+                        <span id="textboxHeader"><u>Days Since First Date</u></span>
+                        <div id="firstDate"></div>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
