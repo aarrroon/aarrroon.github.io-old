@@ -1,0 +1,92 @@
+body {
+    background-color: white;
+  }
+  
+  #box {
+    border-style: solid;
+    margin: auto;
+    width: 50%;
+    background-color: lightskyblue;
+  }
+  #keyboard {
+      font-size: 25px
+  }
+  #guessesRemaining {
+      text-align: center;
+  }
+
+  /* Banner Section */
+  
+  #banner {
+    text-align: center;
+    font-size: 25px;
+  }
+  
+  #banner h1 {
+    
+    font-family: 'Philosopher', sans-serif;
+    font-weight: 295;
+    color: white;
+  }
+  
+  /* Blog Post */
+  
+  #blog {
+    
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  #blog .post {
+    
+    
+  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Philosopher', sans-serif;
+    font-weight: 300;
+    font-size: 1rem;
+    text-align: center;
+    line-height: 1.8;
+    color: #444444;
+  }
+  
+  .post h2 {
+   
+   font-family: 'Philosopher', sans-serif; 
+  }
+  
+  .post h3 {
+    
+    color: #999999;
+  }
+  
+  .post .opening-line {
+    margin-top: 4.1875rem;
+    margin-bottom: 1.5rem;
+    color: black;
+    font-weight: bold;
+  }
+  
+  
+  /* Blog Images */
+  
+  
+  .images .image-container {
+    display: inline-block;
+    
+  }
+  
+  /* Footer */
+  
+  footer {
+    padding: 4rem 0;
+    border-top: 1px solid #999999;
+    font-family: 'Philosopher', sans-serif;
+    
+    color: #999999;
+    text-align: center;
+  }
