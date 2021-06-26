@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Payment Record</title>
+    </head>
+    <body>
+        <div id="title">
+
+        </div>
+        <div id="inputs">
+            <div id=weekSelection>
+
+            </div>
+            <div id="daySelection">
+                <label for="day">Choose a day:</label>
+                <select name="day" id="day">
+                    <option value="" selected hidden>Select a day</option>
+                    <option value="monday">Monday</option>
+                    <option value="tueday">Tuesday</option>
+                    <option value="wednesday">Wednesday</option>
+                    <option value="thursday">Thursday</option>
+                    <option value="friday">Friday</option>
+                    <option value="saturday">Saturday</option>
+                    <option value="sunday">Sunday</option>
+                </select>
+            </div>
+            <div>
+                <label for="hours">How long did you work?</label>
+                <input type="text" id="hours" name="hours" placeholder="0" >
+            </div>
+            <button onclick="newShift()">Save Shift</button>
+        </div>  
+        <div id="display">
+
+        </div>
+        <script src="inflow.js"></script>
+    </body>
+</html>
