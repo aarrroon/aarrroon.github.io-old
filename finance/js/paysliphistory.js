@@ -1,52 +1,12 @@
 "use strict"; 
-//constants
-const WEEK_LIST_KEY = "weekListKey"; 
+
 
 //global variables
-let oldestWeek = new Date("9 May 2021"); //CAN BE CHANGED IN SETTINGS.HTML
+let oldestWeek = new Date("30 May 2021"); //CAN BE CHANGED IN SETTINGS.HTML
 let hourlySalary = 21;
+let hourlySalaryWeekend = 23;
 
-/*
- The function checkData has parameter 'key', and is used to check whether there is data saved to that parameter 'key'
- in local storage. If there is, it returns true, if not, it returns false. 
-*/
-function checkData(key) {
-    let storageData = localStorage.getItem(key);
-    if (storageData) {
-        return true;
-    }
-    else {
-        return false;
-    }
-}
 
-/*
- The function updateData has the parameters 'data' and 'key'. If the 'data' is an object it stringies it first.
- The function then saves the parameter 'data' to local storage and assigns it to the parameter 'key'. 
-*/
-function updateData(key, data) {
-    let jsonData = data;
-    if (typeof data == "object") {
-        jsonData = JSON.stringify(data);
-    }
-    localStorage.setItem(key, jsonData);
-}
-
-/*
- The function retrieveData has the parameter 'key'. This function retrieves data using the key parameter, and if data was 
- previously an object, it parses it. Either way, it will return the data obtained.
-*/
-function retrieveData(key) {
-    let data = localStorage.getItem(key);
-    try {
-        data = JSON.parse(data);
-    }
-    catch (e) {
-    }
-    finally {
-        return data;
-    }
-}
 
 
 //Classes
@@ -279,9 +239,9 @@ function displayShifts()
                     hoursWorkedInFortnight += Number(weekList._listOfWeeks[i+1]._listOfShifts[k]._duration);
                 }
             }
-
+            let totalPay = hoursWorkedInFortnight*hourlySalary;
             output += `<td>${hoursWorkedInFortnight}</td>`
-            output += `<td>$${hoursWorkedInFortnight*hourlySalary}</td>`
+            output += `<td>$${totalPay.toFixed(2)}</td>`
             output += `</tr>`
             
         }
@@ -330,7 +290,7 @@ function displayShifts()
 //global code
 //checks if there is existing data
 let weekList = new WeekList;
-
+//checks if there is payslip data
 if (checkData(WEEK_LIST_KEY) == true) {
     let data = retrieveData(WEEK_LIST_KEY);
     weekList.fromData(data);
@@ -346,6 +306,23 @@ else {
         checkForNewWeek();
         i++;
     }
+}
+
+//checks if there are previous settings data
+if (checkData(SETTINGS_KEY) == true) {
+    let data = retrieveData(SETTINGS_KEY);
+    hourlySalary = Number(data.hourlySalary);
+    hourlySalaryWeekend = Number(data.hourlySalaryWeekend);
+}
+else 
+{
+    let errorSettingsRef = document.getElementById("errorBanner")
+    errorSettingsRef.innerHTML = `
+    <h1>
+        Please click on the settings icon to set your salary and other settings.
+    </h1>
+    
+    `
 }
 
 
@@ -420,4 +397,9 @@ updateData(WEEK_LIST_KEY,weekList)
         j++;
     }
     output +=`</tr></table>`
+    */
+
+    /*
+{"_listOfWeeks":[{"_weekNumber":"1","_startingDate":"2021-05-29T14:00:00.000Z","_listOfShifts":[{"_day":"Wednesday","_week":"1","_duration":"6.5"},{"_day":"Thursday","_week":"1","_duration":"6.5"},{"_day":"Friday","_week":"1","_duration":"4"}]},{"_weekNumber":"2","_startingDate":"2021-06-05T14:00:00.000Z","_listOfShifts":[{"_day":"Monday","_week":"2","_duration":"6.5"},{"_day":"Friday","_week":"2","_duration":3.5}]},{"_weekNumber":"3","_startingDate":"2021-06-12T14:00:00.000Z","_listOfShifts":[{"_day":"Thursday","_week":"3","_duration":"5.5"},{"_day":"Friday","_week":"3","_duration":"6"}]},{"_weekNumber":"4","_startingDate":"2021-06-19T14:00:00.000Z","_listOfShifts":[{"_day":"Monday","_week":"4","_duration":"6.5"},{"_day":"Tuesday","_week":"4","_duration":"6.5"},{"_day":"Wednesday","_week":"4","_duration":"6.5"},{"_day":"Thursday","_week":"4","_duration":"6.5"}]},{"_weekNumber":"5","_startingDate":"2021-06-26T14:00:00.000Z","_listOfShifts":[]}]}
+{"hourlySalary":"21.78","hourlySalaryWeekend":"23"}
     */

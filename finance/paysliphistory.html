@@ -7,10 +7,12 @@
     <body>
         <nav class="topnav">
             <a href="balancesheet.html">Balance Sheet</a> 
+            <a href="paysliphistory.html" class="active">Payslip History</a> 
             <a href="settings.html">Settings</a>
         </nav>
         
         <!-- **************** NEW CONTENT UNDER -->
+        <div id="errorBanner"></div>
         <div id="title">
 
         </div>
@@ -33,14 +35,15 @@
             </div>
             <div>
                 <label for="hours">How long did you work?</label>
-                <input type="text" id="hours" name="hours" placeholder="0" >
+                <input type="text" id="hours" name="hours" placeholder="0">
             </div>
             <button onclick="newShift()">Save Shift</button>
         </div>  
         <div id="display">
 
         </div>
-        <script src="js/inflow.js"></script>
+        <script src="js/shared.js"></script>
+        <script src="js/paysliphistory.js"></script>
     </body>
 </html>
 
