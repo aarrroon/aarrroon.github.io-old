@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Payment Record</title>
+        <link rel="stylesheet" href="css/inflow.css">
+    </head>
+    <body>
+        <nav class="topnav">
+            <a href="balancesheet.html">Balance Sheet</a> 
+            <a href="paysliphistory.html" class="active">Payslip History</a> 
+            <a href="settings.html">Settings</a>
+        </nav>
+        
+        <!-- **************** NEW CONTENT UNDER -->
+        <label for="description">Description:</label>
+        <input id="description" type="text">
+
+        <label for="amount">Amount:</label>
+        <input id="amount" type="number">
+
+        <input type="radio" id="inflow" name="fav_language" value="inflow">
+        <label for="inflow">Asset</label>
+        <input type="radio" id="outflow" name="fav_language" value="outflow">
+        <label for="outflow">Liability</label>
+
+        <button onclick="newRecord()">Save Record</button>
+        
+
+    
+
+        
+
+
+        
+        <div id="currentAssets"></div>
+        <div id="nonCurrentAssets"></div>
+        <div id="liabilities"></div>
+        <h1>Total Balance is: <span id="totalBalance"></span></h1>
+        <script src="js/shared.js"></script>
+        <script src="js/balancesheet.js"></script>
+    </body>
+</html>
+
+
