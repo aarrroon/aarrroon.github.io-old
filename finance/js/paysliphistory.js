@@ -82,6 +82,29 @@ function displayShifts()
     {
         timesToRunFunction = weekList.listOfWeeks.length-1
     }
+    //header row
+    output += `<tr>
+    <th>Week Starts On</th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th>Week Starts On</th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th>Total Hours Worked</th>
+    <th>Paycheck</th>
+    </tr>
+    
+    
+    
+    `
     for (let i = 0; i < timesToRunFunction ;i+=2)
         { 
             //first row
@@ -98,7 +121,7 @@ function displayShifts()
                 }
                 else 
                 {
-                    output += `<td>${weekList.listOfWeeks[i].listOfShifts[k]._day}</td>`;
+                    output += `<td style="color:darkgreen"><b>${weekList.listOfWeeks[i].listOfShifts[k]._day}</b></td>`;
                 }
             }
             tempDate = new Date(weekList.listOfWeeks[i+1].startingDate)
@@ -111,11 +134,11 @@ function displayShifts()
                 }
                 else 
                 {
-                    output += `<td>${weekList.listOfWeeks[i+1].listOfShifts[k]._day}</td>`;
+                    output += `<td style="color:darkgreen"><b>${weekList.listOfWeeks[i+1].listOfShifts[k]._day}</b></td>`;
                 }
             }
-            output += `<td>Total Hours Worked</td>`
-            output += `<td>Paycheck</td>`
+            output += `<td></td>`
+            output += `<td></td>`
             output += `</tr>`
             //second row
             output += `<tr>`
@@ -146,8 +169,8 @@ function displayShifts()
                 }
             }
             let totalPay = hoursWorkedInFortnight*hourlySalary;
-            output += `<td>${hoursWorkedInFortnight}</td>`
-            output += `<td>$${totalPay.toFixed(2)}</td>`
+            output += `<td style="color:red;font-weight:bold">${hoursWorkedInFortnight}</td>`
+            output += `<td style="color:red;font-weight:bold">$${totalPay.toFixed(2)}</td>`
             output += `</tr>`
             
         }
@@ -168,11 +191,11 @@ function displayShifts()
             }
             else 
             {
-                output += `<td>${weekList.listOfWeeks[i].listOfShifts[k]._day}</td>`;
+                output += `<td style="color:darkgreen;font-weight:bold">${weekList.listOfWeeks[i].listOfShifts[k]._day}</td>`;
                 hoursWorkedInFortnight += Number(weekList._listOfWeeks[i]._listOfShifts[k]._duration);
             }
         }
-        output += `<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>Total Hours Worked</td><td>Paycheck</td>`
+        output += `<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>`
         output += `</tr>`
         output += `<tr>`
         output += `<td></td>`
@@ -189,8 +212,8 @@ function displayShifts()
         }
         output += `<td></td><td></td><td></td><td></td><td></td><td></td><td></td>`
         let totalPay = hoursWorkedInFortnight*hourlySalary;
-        output += `<td>${hoursWorkedInFortnight}</td>`
-        output += `<td>$${totalPay.toFixed(2)}</td>`
+        output += `<td style="color:red;font-weight:bold">${hoursWorkedInFortnight}</td>`
+        output += `<td style="color:red;font-weight:bold">$${totalPay.toFixed(2)}</td>`
         output += `</tr>`
         
     }
