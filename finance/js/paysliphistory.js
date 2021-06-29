@@ -1,98 +1,4 @@
 "use strict"; 
-
-
-//global variables
-let oldestWeek = new Date("30 May 2021"); //CAN BE CHANGED IN SETTINGS.HTML
-let hourlySalary = 21;
-let hourlySalaryWeekend = 23;
-
-
-
-
-//Classes
-class Shift
-{
-    constructor(day ="",week="",duration="")
-    {
-        this._day = day;
-        this._week = week;
-        this._duration = duration;
-    }
-    get day() {return this._day}
-    get week() {return this._week}
-    get duration() {return this._duration}
-
-    fromData(data)
-    {
-        this._day = data._day;
-        this._week = data._week;
-        this._duration = data._duration;
-    }
-}
-class Week
-{
-    constructor(weekNumber,startingDate)
-    {
-        this._weekNumber = weekNumber;
-        this._startingDate = startingDate;
-        this._listOfShifts = [];
-    }
-    get weekNumber() {return this._weekNumber}
-    get startingDate() {return this._startingDate}
-    get listOfShifts() {return this._listOfShifts}
-
-    getTotalHours()
-    {
-        //****NEED TO CONTINUE */
-    }
-    addShift(shift)
-    {
-        this._listOfShifts.push(shift);
-    }
-    removeShift(index)
-    {
-        this._listOfShifts.splice(index,1);
-    }
-    fromData(data)
-    {
-        for (let i = 0; i < data._listOfShifts.length; i++)
-        {
-            let tempShift = new Shift();
-            tempShift.fromData(data._listOfShifts[i]);
-            this._listOfShifts.push(tempShift);
-        }
-        this._weekNumber = data._weekNumber;
-        this._startingDate = data._startingDate;
-        this._listOfShifts = data._listOfShifts;
-    }
-}
-class WeekList
-{
-    constructor()
-    {
-        this._listOfWeeks = [];
-    }
-    get listOfWeeks() {return this._listOfWeeks}
-
-    updateWeek(week)
-    {
-        //FINISH THIS OFF
-    }
-    addWeek(week)
-    {
-        this._listOfWeeks.push(week);
-    }
-    fromData(data)
-    {
-        for (let i=0;i<data._listOfWeeks.length;i++)
-        {
-            let tempWeek = new Week();
-            tempWeek.fromData(data._listOfWeeks[i]);
-            this._listOfWeeks.push(tempWeek);   
-        }
-    }
-}
-
 /////////////////////////////////////////////////////////////////////////////////////////////
 //function that displays the inputs div 
 function displayWeekSelection()
@@ -248,6 +154,7 @@ function displayShifts()
     //if there is an odd number of week, this adds the extra week
     if (weekList.listOfWeeks.length % 2 == 1)
     {
+        let hoursWorkedInFortnight = 0;
         output += `<tr>`
         let i = weekList.listOfWeeks.length-1;
         let tempDate = new Date(weekList.listOfWeeks[i].startingDate)
@@ -262,8 +169,10 @@ function displayShifts()
             else 
             {
                 output += `<td>${weekList.listOfWeeks[i].listOfShifts[k]._day}</td>`;
+                hoursWorkedInFortnight += Number(weekList._listOfWeeks[i]._listOfShifts[k]._duration);
             }
         }
+        output += `<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>Total Hours Worked</td><td>Paycheck</td>`
         output += `</tr>`
         output += `<tr>`
         output += `<td></td>`
@@ -278,6 +187,10 @@ function displayShifts()
                 output += `<td>${weekList._listOfWeeks[i]._listOfShifts[k]._duration}</td>`;
             }
         }
+        output += `<td></td><td></td><td></td><td></td><td></td><td></td><td></td>`
+        let totalPay = hoursWorkedInFortnight*hourlySalary;
+        output += `<td>${hoursWorkedInFortnight}</td>`
+        output += `<td>$${totalPay.toFixed(2)}</td>`
         output += `</tr>`
         
     }
@@ -287,9 +200,25 @@ function displayShifts()
     let displayRef = document.getElementById("display");
     displayRef.innerHTML = output;
 }
-//global code
-//checks if there is existing data
-let weekList = new WeekList;
+
+function goToAdiInsights()
+{
+    const MILLISECONDS_IN_DAY = 86400000;
+    let largestWeekIndex = -1;
+    if (weekList.listOfWeeks.length != 0)
+    {
+        largestWeekIndex = weekList.listOfWeeks.length-1;
+    }
+    let latestDate = new Date(weekList.listOfWeeks[largestWeekIndex].startingDate);
+    let updatedDate = new Date(latestDate.getTime() + MILLISECONDS_IN_DAY)
+    console.log(updatedDate);
+    let day = updatedDate.getDate() + 1;
+    let month = updatedDate.getMonth() + 1;
+    let url = `https://see.adiinsights.com/shifts/?unit=6145&date=2021-${month}-${day}`;
+    window.location.replace(url);
+}
+
+//GLOBAL CODE
 //checks if there is payslip data
 if (checkData(WEEK_LIST_KEY) == true) {
     let data = retrieveData(WEEK_LIST_KEY);
@@ -324,7 +253,6 @@ else
     
     `
 }
-
 
 displayWeekSelection();
 checkForNewWeek();
