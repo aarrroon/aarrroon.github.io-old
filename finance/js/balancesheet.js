@@ -1,4 +1,6 @@
 "use strict";
+const RECORD_LIST_KEY = "recordList";
+
 let currentAssetsRef = document.getElementById("currentAssets");
 let nonCurrentAssetsRef = document.getElementById("nonCurrentAssets");
 let liabilitiesRef = document.getElementById("liabilities");
@@ -34,12 +36,19 @@ class BalanceSheet
         
     }
     get listOfRecords() {return this._listOfRecords}
+    
     fromData(data) {
-        for (let i = 0; i < data._listOfRecords.length; i++) {
+        for (let i = 0; i < data._listOfRecords.length; i++) 
+        {
             let tempRecord = new Record();
-            tempBooking.fromData(data._listOfBookings[i])
-            this._listOfBookings.push(tempBooking)
+            tempRecord.fromData(data._listOfRecords[i])
+            this._listOfRecords.push(tempBooking)
         }
+    }
+
+    addRecord(record)
+    {
+        this._listOfRecords.push(record);
     }
 }
 
@@ -60,7 +69,15 @@ function getRadioButton()
 function addRecord()
 {
     let tempRecord = new Record(descriptionRef.value,amountRef.value,getRadioButton());
-
-
+    balanceSheet.addRecord(tempRecord);
+    updateData(RECORD_LIST_KEY,balanceSheet);
 }
 
+function displayRecords()
+{
+    let output = "";
+    
+}
+
+//global code
+let balanceSheet = new BalanceSheet();
