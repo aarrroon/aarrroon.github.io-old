@@ -8,6 +8,10 @@ let totalBalanceRef = document.getElementById("totalBalance");
 let descriptionRef = document.getElementById("description");
 let amountRef = document.getElementById("amount");
 
+//global variables
+let totalAssets = "";
+let totalLiabilities = "";
+
 class Record 
 {
     constructor(description="",amount="",type="")
@@ -76,7 +80,7 @@ function addRecord()
 function displayRecords()
 {
     let output = "";
-    
+
 }
 
 //global code
