@@ -51,6 +51,33 @@ function retrieveData(key) {
     }
 }
 
+//function that checks if the current week is a new week 
+function checkForNewWeek()
+{
+    let largestWeekIndex = -1;
+    if (weekList.listOfWeeks.length != 0)
+    {
+        largestWeekIndex = weekList.listOfWeeks.length-1;
+    }
+    const MILLISECONDS_IN_WEEK = 604800000;
+    let latestDate = new Date(weekList.listOfWeeks[largestWeekIndex].startingDate)
+    let today = Date.now();
+    if (today-latestDate.getTime() > MILLISECONDS_IN_WEEK)
+    {
+        //need to make new week
+        let newWeekMilliseconds = latestDate.getTime()+MILLISECONDS_IN_WEEK;
+        let tempDate = new Date()
+        tempDate = tempDate.setTime(newWeekMilliseconds);
+        let tempDateNew = new Date(tempDate)
+        let tempNumber = largestWeekIndex+2;
+        let tempWeek = new Week(tempNumber.toString(),tempDateNew);
+        weekList.listOfWeeks.push(tempWeek);
+        displayWeekSelection()
+        updateData(WEEK_LIST_KEY,weekList)
+    }
+    
+}
+
 //Classes
 class Shift
 {
@@ -138,5 +165,22 @@ class WeekList
 //global code
 //checks if there is existing data
 let weekList = new WeekList;
+
+if (checkData(WEEK_LIST_KEY) == true) {
+    let data = retrieveData(WEEK_LIST_KEY);
+    weekList.fromData(data);
+}
+else {
+    let week1 = new Week("1",oldestWeek);
+    weekList.addWeek(week1);
+    let tempToday = Date.now();
+    let oldestMilliseconds = oldestWeek.getTime();
+    let i = 1;
+    while (((tempToday - oldestMilliseconds)/518400000) - i > 1)
+    {
+        checkForNewWeek();
+        i++;
+    }
+}
 
 

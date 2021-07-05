@@ -21,32 +21,7 @@ function displayWeekSelection()
     weekSelectionRef.innerHTML = output; 
 }
 
-//function that checks if the current week is a new week 
-function checkForNewWeek()
-{
-    let largestWeekIndex = -1;
-    if (weekList.listOfWeeks.length != 0)
-    {
-        largestWeekIndex = weekList.listOfWeeks.length-1;
-    }
-    const MILLISECONDS_IN_WEEK = 604800000;
-    let latestDate = new Date(weekList.listOfWeeks[largestWeekIndex].startingDate)
-    let today = Date.now();
-    if (today-latestDate.getTime() > MILLISECONDS_IN_WEEK)
-    {
-        //need to make new week
-        let newWeekMilliseconds = latestDate.getTime()+MILLISECONDS_IN_WEEK;
-        let tempDate = new Date()
-        tempDate = tempDate.setTime(newWeekMilliseconds);
-        let tempDateNew = new Date(tempDate)
-        let tempNumber = largestWeekIndex+2;
-        let tempWeek = new Week(tempNumber.toString(),tempDateNew);
-        weekList.listOfWeeks.push(tempWeek);
-        displayWeekSelection()
-        updateData(WEEK_LIST_KEY,weekList)
-    }
-    
-}
+
 
 //function that creates new shift
 function newShift()
@@ -242,23 +217,7 @@ function goToAdiInsights()
 }
 
 //GLOBAL CODE
-//checks if there is payslip data
-if (checkData(WEEK_LIST_KEY) == true) {
-    let data = retrieveData(WEEK_LIST_KEY);
-    weekList.fromData(data);
-}
-else {
-    let week1 = new Week("1",oldestWeek);
-    weekList.addWeek(week1);
-    let tempToday = Date.now();
-    let oldestMilliseconds = oldestWeek.getTime();
-    let i = 1;
-    while (((tempToday - oldestMilliseconds)/518400000) - i > 1)
-    {
-        checkForNewWeek();
-        i++;
-    }
-}
+
 
 //checks if there are previous settings data
 if (checkData(SETTINGS_KEY) == true) {
@@ -351,6 +310,6 @@ updateData(WEEK_LIST_KEY,weekList)
     */
 
     /*
-{"_listOfWeeks":[{"_weekNumber":"1","_startingDate":"2021-05-29T14:00:00.000Z","_listOfShifts":[{"_day":"Wednesday","_week":"1","_duration":"6.5"},{"_day":"Thursday","_week":"1","_duration":"6.5"},{"_day":"Friday","_week":"1","_duration":"4"}]},{"_weekNumber":"2","_startingDate":"2021-06-05T14:00:00.000Z","_listOfShifts":[{"_day":"Monday","_week":"2","_duration":"6.5"},{"_day":"Friday","_week":"2","_duration":3.5}]},{"_weekNumber":"3","_startingDate":"2021-06-12T14:00:00.000Z","_listOfShifts":[{"_day":"Thursday","_week":"3","_duration":"5.5"},{"_day":"Friday","_week":"3","_duration":"6"}]},{"_weekNumber":"4","_startingDate":"2021-06-19T14:00:00.000Z","_listOfShifts":[{"_day":"Monday","_week":"4","_duration":"6.5"},{"_day":"Tuesday","_week":"4","_duration":"6.5"},{"_day":"Wednesday","_week":"4","_duration":"6.5"},{"_day":"Thursday","_week":"4","_duration":"6.5"}]},{"_weekNumber":"5","_startingDate":"2021-06-26T14:00:00.000Z","_listOfShifts":[]}]}
+{"_listOfWeeks":[{"_weekNumber":"1","_startingDate":"2021-05-29T14:00:00.000Z","_listOfShifts":[{"_day":"Wednesday","_week":"1","_duration":"6.5"},{"_day":"Thursday","_week":"1","_duration":"6.5"},{"_day":"Friday","_week":"1","_duration":"4"}]},{"_weekNumber":"2","_startingDate":"2021-06-05T14:00:00.000Z","_listOfShifts":[{"_day":"Monday","_week":"2","_duration":"6.5"},{"_day":"Friday","_week":"2","_duration":3.5}]},{"_weekNumber":"3","_startingDate":"2021-06-12T14:00:00.000Z","_listOfShifts":[{"_day":"Thursday","_week":"3","_duration":"5.5"},{"_day":"Friday","_week":"3","_duration":"6"}]},{"_weekNumber":"4","_startingDate":"2021-06-19T14:00:00.000Z","_listOfShifts":[{"_day":"Monday","_week":"4","_duration":"6.5"},{"_day":"Tuesday","_week":"4","_duration":"6.5"},{"_day":"Wednesday","_week":"4","_duration":"6.5"},{"_day":"Thursday","_week":"4","_duration":"6.5"}]},{"_weekNumber":"5","_startingDate":"2021-06-26T14:00:00.000Z","_listOfShifts":[{"_day":"Monday","_week":"5","_duration":"6.5"},{"_day":"Wednesday","_week":"5","_duration":"6.5"},{"_day":"Thursday","_week":"5","_duration":"6.5"}]},{"_weekNumber":"6","_startingDate":"2021-07-03T14:00:00.000Z","_listOfShifts":[{"_day":"Thursday","_week":"6","_duration":"6.5"},{"_day":"Friday","_week":"6","_duration":"7"}]}]}
 {"hourlySalary":"21.78","hourlySalaryWeekend":"23"}
     */
