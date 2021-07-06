@@ -80,6 +80,12 @@ function addRecord()
 function displayRecords()
 {
     let output = "";
+    output += `
+    
+    
+    
+    
+    `
 
 }
 
