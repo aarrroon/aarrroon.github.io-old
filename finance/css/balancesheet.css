@@ -1,0 +1,58 @@
+.container {
+    background-color: lightblue;
+    display: grid;
+    grid-template-columns:  1fr 1fr ;
+    grid-column-gap: 10%;
+    padding: 5%;
+    
+}
+
+.assetsContainer {
+    background-color: lightgrey;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding:5%;
+}
+
+.liabilitiesContainer {
+    background-color: lightgreen;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding:5%;
+}
+
+.assetItem {
+    background-color: lightsalmon;
+    padding:0;
+    border-style:solid;
+    margin-bottom: 25px;
+    margin-top:25px;
+}
+
+.liabilityItem {
+    background-color: lightcoral;
+    padding:5%;
+    border-style:solid;
+}
+
+.itemHeader {
+    border-style: solid;
+    text-align: center;
+    
+}
+
+.itemBody {
+    border-style: solid;
+    border-top:0px;
+    border-bottom: 0px;
+}
+
+.itemFooter {
+    border-style: solid;
+    text-align: end;
+    
+    
+    
+}
