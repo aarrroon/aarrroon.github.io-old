@@ -46,8 +46,7 @@
     position: absolute;
     animation-timing-function: linear; 
     z-index: 1;
-    width:100px ;
-    
+    width:6vw;
 }
 
 @keyframes heartMove 
@@ -455,6 +454,13 @@
 100% {
     transform: translate(0px,105vh)
   }
+}
+
+#main {
+  grid-area: main;
+  display: block;
+  margin: auto;
+  
 }
 
 .heartsAnimation {

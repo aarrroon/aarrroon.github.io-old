@@ -65,4 +65,11 @@ function importData()
     alert("You have imported data!");
 }
 
+function resetData()
+{
+    let data ='{"_listOfWeeks":[{"_weekNumber":"1","_startingDate":"2021-05-29T14:00:00.000Z","_listOfShifts":[{"_day":"Wednesday","_week":"1","_duration":"6.5"},{"_day":"Thursday","_week":"1","_duration":"6.5"},{"_day":"Friday","_week":"1","_duration":"4"}]},{"_weekNumber":"2","_startingDate":"2021-06-05T14:00:00.000Z","_listOfShifts":[{"_day":"Monday","_week":"2","_duration":"6.5"},{"_day":"Friday","_week":"2","_duration":3.5}]},{"_weekNumber":"3","_startingDate":"2021-06-12T14:00:00.000Z","_listOfShifts":[{"_day":"Thursday","_week":"3","_duration":"5.5"},{"_day":"Friday","_week":"3","_duration":"6"}]},{"_weekNumber":"4","_startingDate":"2021-06-19T14:00:00.000Z","_listOfShifts":[{"_day":"Monday","_week":"4","_duration":"6.5"},{"_day":"Tuesday","_week":"4","_duration":"6.5"},{"_day":"Wednesday","_week":"4","_duration":"6.5"},{"_day":"Thursday","_week":"4","_duration":"6.5"}]},{"_weekNumber":"5","_startingDate":"2021-06-26T14:00:00.000Z","_listOfShifts":[{"_day":"Monday","_week":"5","_duration":"6.5"},{"_day":"Wednesday","_week":"5","_duration":"6.5"},{"_day":"Thursday","_week":"5","_duration":"6.5"}]},{"_weekNumber":"6","_startingDate":"2021-07-03T14:00:00.000Z","_listOfShifts":[{"_day":"Thursday","_week":"6","_duration":"6.5"},{"_day":"Friday","_week":"6","_duration":"7"}]},{"_weekNumber":"7","_startingDate":"2021-07-10T14:00:00.000Z","_listOfShifts":[{"_day":"Monday","_week":"7","_duration":"6.5"},{"_day":"Tuesday","_week":"7","_duration":"6.5"},{"_day":"Wednesday","_week":"7","_duration":"6.5"},{"_day":"Thursday","_week":"7","_duration":"6.5"}]},{"_weekNumber":"8","_startingDate":"2021-07-17T14:00:00.000Z","_listOfShifts":[{"_day":"Tuesday","_week":"8","_duration":"6.5"},{"_day":"Wednesday","_week":"8","_duration":"6.5"},{"_day":"Friday","_week":"8","_duration":"6.5"}]}]}';
+    localStorage.setItem(WEEK_LIST_KEY, data);
+    alert("You have reset your data!");
+}
+
 displaySalaryInputs();
