@@ -1,30 +1,28 @@
 #main {
-  
+    background-image: url("https://i.pinimg.com/originals/46/8c/7f/468c7f52504a31263058ddbc5b0d7627.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow: hidden;
 }
 #container {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: 350px 2fr ;
   grid-template-rows: auto 1000px auto;
   grid-template-areas: 
-    "header header header"
-    "galleryLeft main galleryRight"
-    "footer footer footer"
+    "header header "
+    "spotify gallery "
+    "footer footer "
   
 }
 
 #title {
    text-align: center;
   grid-area: header;
-  background-color:lightblue;
+  background-color:lightcoral;
   margin-top:0px;
    
 }
-#img-div {
-  
-}
-#image {
-  
-}
+
 
 #img-caption {
     grid-area: galleryLeft;
@@ -32,11 +30,20 @@
   background-color:lightblue;
 }
 
-#tribute-info {
-    grid-area: galleryRight;
-  grid-area: footer;
-  text-align: center;
-  background-color:lightblue;
+#gallery {
+    display: flex;
+    grid-area: gallery;
+    background-color: lightcyan;
+
+}
+
+.photo {
+
+}
+
+.photoTall {
+    height:300px;
+    width: auto;
 }
 
 #heart {
@@ -456,11 +463,12 @@
   }
 }
 
-#main {
-  grid-area: main;
+#spotify {
+  grid-area: spotify;
   display: block;
   margin: auto;
-  
+  background-color: beige;
+
 }
 
 .heartsAnimation {

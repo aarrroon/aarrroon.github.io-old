@@ -4,7 +4,7 @@ const WEEK_LIST_KEY = "weekListKey";
 const SETTINGS_KEY = "settingKey";
 
 //global variables
-let oldestWeek = new Date("30 May 2021"); //CAN BE CHANGED IN SETTINGS.HTML
+let oldestWeek = new Date("30 July 2021"); //CAN BE CHANGED IN SETTINGS.HTML
 let hourlySalary = 21;
 let hourlySalaryWeekend = 23;
 
