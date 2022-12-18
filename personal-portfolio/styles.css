@@ -156,9 +156,13 @@ body {
    
   }
 
+.header-nav a img {
+    width: 30px;
+}
+
 .header-nav a.split {
     float: left;
-    background-color: #04AA6D;
     color: white;
+    font-weight: bold;
   }
   
