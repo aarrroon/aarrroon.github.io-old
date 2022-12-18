@@ -1,0 +1,164 @@
+body {
+    margin: 0px;
+    color: #21130d;
+    text-align: center;
+}
+
+/* Section Hero */
+#section-hero {
+    background-color: #fec89a;
+
+}
+
+#section-hero img {
+    display: block;
+    width: 150px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 150px;
+
+}
+
+#aaron {
+    margin-top: 0;
+}
+
+.title {
+    font-family: 'Roboto Condensed', sans-serif;
+    margin: 0px;
+
+
+}
+
+#education {
+    font-family: 'Montserrat', sans-serif;
+    margin: 10px;
+}
+
+/* Section Body */
+.section-body {
+    height: 100vh;
+    padding-top: 30px;
+}
+
+#section-body-one {
+    background-color: #fdfdfd;
+}
+/* Section Body Two */
+#section-body-two {
+    background-color: #FEDEC2;
+}
+
+/* Cards */
+.card-container {
+    display: flex;
+    justify-content: space-evenly;
+    padding: 20px 0 20px 0;
+}
+
+.card {
+    width: 250px;
+    height: 150px;
+    background-color: white;
+    box-shadow: 0 0 5px #21130d;
+    padding-top: 20px;
+
+
+}
+
+.card img {
+    height: 72px;
+    padding-bottom: 30px;
+}
+
+.card h5 {
+    margin-top: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bolder;
+    font-size: 18px;
+}
+
+#html {
+    border-bottom: 4px solid #f16529;
+}
+
+#css {
+    border-bottom: 4px solid #29a8e0;
+}
+
+#js {
+    border-bottom: 4px solid #8acf17;
+}
+
+#python {
+    border-bottom: 4px solid #fcdc62;
+}
+
+#react {
+    border-bottom: 4px solid #68dcfc;
+}
+
+/* Progress Bar */
+#progress-bar {
+    height: 8px;
+    background: #FF4B4B;
+    width: 0%;
+    position: fixed;
+    top: 0;
+    z-index: 1;
+}
+
+/* Footer */
+.footer-nav {
+    background-color: #333;
+    overflow: hidden;
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    justify-content: space-between;
+    color: #f2f2f2;
+}
+
+.footer-nav h5 {
+    font-weight: 400;
+    padding: 20px;
+    margin: 0;
+}
+
+#footer-icons {
+    width: 263px;
+    display: flex;
+    justify-content: space-evenly;
+    padding-top: 10px;
+}
+
+#footer-icons a img {
+    width: 25px;
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+/* Header */
+.header-nav {
+    background-color: #333;
+    overflow: hidden;
+    font-family: 'Montserrat', sans-serif;
+    color: #f2f2f2;
+}
+
+.header-nav a{
+    float: right;
+    color: #f2f2f2;
+    text-align: center;
+    text-decoration: none;  
+    font-size: 17px;
+    padding: 14px 16px;
+   
+  }
+
+.header-nav a.split {
+    float: left;
+    background-color: #04AA6D;
+    color: white;
+  }
+  
