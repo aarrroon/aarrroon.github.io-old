@@ -104,7 +104,7 @@ body {
     background: #FF4B4B;
     width: 0%;
     position: fixed;
-    top: 0;
+    top: 43.3px;
     z-index: 1;
 }
 
@@ -120,7 +120,7 @@ body {
 
 .footer-nav h5 {
     font-weight: 400;
-    padding: 20px;
+    padding: 13px;
     margin: 0;
 }
 
@@ -128,7 +128,16 @@ body {
     width: 263px;
     display: flex;
     justify-content: space-evenly;
-    padding-top: 10px;
+    
+}
+
+#footer-icons a {
+    padding-top: 8px;
+    width: 100px;
+}
+
+#footer-icons a:hover {
+    background-color: #21130d;
 }
 
 #footer-icons a img {
@@ -144,6 +153,8 @@ body {
     overflow: hidden;
     font-family: 'Montserrat', sans-serif;
     color: #f2f2f2;
+    position: fixed;
+    width: 100%;
 }
 
 .header-nav a{
@@ -151,13 +162,18 @@ body {
     color: #f2f2f2;
     text-align: center;
     text-decoration: none;  
-    font-size: 17px;
-    padding: 14px 16px;
+    font-size: 19px;
+    padding: 10px;
    
   }
 
+  .header-nav a:hover {
+    background-color: #4c575c;
+  }
+
 .header-nav a img {
-    width: 30px;
+    height: 17px;
+    padding-right: 3px;
 }
 
 .header-nav a.split {
