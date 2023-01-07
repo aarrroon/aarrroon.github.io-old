@@ -168,8 +168,38 @@ function saveChoice(num) {
 	popup.addTo(map);
 
 
-    
+    // Close modal and change map view
     map.setCenter([lng, lat]);
     modal.style.display = "none";
+
+    // Obtain the radio values of type
+    let radiosPrice = document.getElementsByName('price');
+    let radiosType = document.getElementsByName('type');
+    
+    let chosenType = null;
+    let chosenPrice = null;
+    // Obtain price 
+    for (var i = 0; i < radiosPrice.length; i++) {
+        if (radiosPrice[i].checked) {
+          // do whatever you want with the checked radio
+          chosenPrice = radiosPrice[i].value;
+          break;
+        }
+    }
+
+    // Obtain type
+    for (var i = 0; i < radiosType.length; i++) {
+        if (radiosType[i].checked) {
+          // do whatever you want with the checked radio
+          chosenType = radiosType[i].value;
+          break;
+        }
+    }
+
+    // Save POI into local storage
+    let tempFood = new FoodPlace([lng, lat], title, chosenType, chosenPrice);
+    foodPlaceList.addFoodPlace(tempFood);
+    updateData(FOOD_LIST_KEY,foodPlaceList)
+    
 }
 
