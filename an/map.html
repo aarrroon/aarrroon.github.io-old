@@ -3,17 +3,17 @@
 
 <head>
 	<link rel="stylesheet" href="styles.css">
+	<link rel="stylesheet" href="map.css">
 	<title>Aaron Tran</title>
 	<link rel="icon" type="image/x-icon" href="images/favicon.ico">
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Lato&family=Montserrat&family=Roboto&display=swap" rel="stylesheet">
+
 	<script src='https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.js'></script>
 	<link href='https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css' rel='stylesheet' />
 
 </head>
 
-<body id="map-body">
+<body id="map-body" onresize="onScreenResize()">
 	<header>
 		<div class="header-nav">
 			<a href="#about" class="split">An & Aaron</a>
@@ -84,8 +84,9 @@
 			</div>
 		</div>
 	</footer>
+	<script src="js/shared.js"></script>
 	<script src="js/map.js"></script>
-	<script src="js/food.js"></script>
+	
 </body>
 
 </html>

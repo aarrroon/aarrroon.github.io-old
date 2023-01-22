@@ -1,12 +1,16 @@
 "use strict "
+const FOOD_LIST_KEY = "foodListKey";
+const MAPBOX_TOKEN = "pk.eyJ1IjoiYWFycm9vbiIsImEiOiJjbGNrNXFhZnUwNXVyM25teHJ6MmJ4enQ4In0.gAHuVBrY2F7BRecWiDQlgA";
+const GEOCODE_TOKEN = '18d4bb5124ea434291f1c92ff6a4f916';
 
 class FoodPlace {
 // Constructor
-	constructor(coordinates, placeLabel, type, price) {
+	constructor(coordinates, placeLabel, type, price, suburb) {
 		this._coordinates = coordinates;
 		this._placeLabel = placeLabel;
         this._type = type;
         this._price = price;
+        this._suburb = suburb;
 		
 	}
 
@@ -15,7 +19,7 @@ class FoodPlace {
 	get placeLabel() { return this._placeLabel; }
     get type() { return this._type; }
     get price() { return this._price; }
-
+    get suburb() { return this._suburb; }
 
 // Methods
 	fromData(data) {
@@ -23,6 +27,7 @@ class FoodPlace {
 		this._placeLabel = data._placeLabel;
 		this._price = data._price;
         this._type = data._type;
+        this._suburb = data._suburb;
 	}
 
 }

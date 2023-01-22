@@ -1,55 +1,35 @@
 "use strict";
-const FOOD_LIST_KEY = "foodListKey";
-const MAPBOX_TOKEN = "pk.eyJ1IjoiYWFycm9vbiIsImEiOiJjbGNrNXFhZnUwNXVyM25teHJ6MmJ4enQ4In0.gAHuVBrY2F7BRecWiDQlgA";
-const GEOCODE_TOKEN = '18d4bb5124ea434291f1c92ff6a4f916';
+
 
 let temp = null;
-let chosen = null;
-let lng = 0;
-let lat = 0;
-let title = null;
 
-// //sets center on a random marker
-// function randomCenter()
-// {
-//     if (foodPlaceList.listOfFoodPlaces.length != 0)
-//     {
-//         let centerIndex = Math.floor((Math.random())*(foodPlaceList.listOfFoodPlaces.length));
-//         let centerCoordinates = foodPlaceList.listOfFoodPlaces[centerIndex].coordinates;
-//         return centerCoordinates;
-//     }
-//     else 
-//     {
-//         let centerCoordinates = [144.946457,-37.840935]
-//         return centerCoordinates;
-//     }
-// }
+
+//sets center on a random marker
+function randomCenter()
+{
+    if (foodPlaceList.listOfFoodPlaces.length != 0)
+    {
+        let centerIndex = Math.floor((Math.random())*(foodPlaceList.listOfFoodPlaces.length));
+        let centerCoordinates = foodPlaceList.listOfFoodPlaces[centerIndex].coordinates;
+        return centerCoordinates;
+    }
+    else 
+    {
+        let centerCoordinates = [144.946457,-37.840935]
+        return centerCoordinates;
+    }
+}
 
 //global code for map
 mapboxgl.accessToken = MAPBOX_TOKEN;
 let map = new mapboxgl.Map({
     container: 'map', // container ID
     style: 'mapbox://styles/mapbox/streets-v11', // style URL
-    center: [144.946457,-37.840935], // starting position [lng, lat]
+    center: randomCenter(), // starting position [lng, lat]
     zoom: 14 // starting zoom
 }
 );
 
-// function showFoodPlaces()
-// {
-//     for (let i = 0; i < foodPlaceList.listOfFoodPlaces.length; i++)
-//     {
-//         let marker = new mapboxgl.Marker({ "color": "#0099ff" });
-//         marker.setLngLat(foodPlaceList.listOfFoodPlaces[i].coordinates);
-//         let popup = new mapboxgl.Popup({ offset: 45});
-//         popup.setHTML(foodPlaceList.listOfFoodPlaces[i].placeLabel);
-//         marker.setPopup(popup)
-//         marker.addTo(map);
-//         popup.addTo(map);
-//     }
-// }
-
-// showFoodPlaces();
 
 // ************ MODAL *************
 // Get the modal
@@ -125,7 +105,7 @@ function getData()
 }
 
 
-// TODO: complete the showData function
+// Show the results in the modal popup
 function showData(result)
 {  
     console.log(result)
@@ -149,11 +129,11 @@ function showData(result)
 }
 
 function saveChoice(num) {
-    chosen = temp.results[num]
-
-    lat = chosen.geometry.lat;
-    lng = chosen.geometry.lng;
-    title = document.getElementById("description").value;
+    let chosen = temp.results[num];
+    let suburb = chosen.components.suburb;
+    let lat = chosen.geometry.lat;
+    let lng = chosen.geometry.lng;
+    let title = document.getElementById("description").value;
     /* lng, lat */ 
     
     // Create new marker
@@ -196,10 +176,35 @@ function saveChoice(num) {
         }
     }
 
+
     // Save POI into local storage
-    let tempFood = new FoodPlace([lng, lat], title, chosenType, chosenPrice);
+    let tempFood = new FoodPlace([lng, lat], title, chosenType, chosenPrice, suburb);
     foodPlaceList.addFoodPlace(tempFood);
     updateData(FOOD_LIST_KEY,foodPlaceList)
     
 }
+
+// Display saved POI markers 
+function showFoodPlaces()
+{
+    for (let i = 0; i < foodPlaceList.listOfFoodPlaces.length; i++)
+    {
+        let marker = new mapboxgl.Marker({ "color": "#0099ff" });
+        marker.setLngLat(foodPlaceList.listOfFoodPlaces[i].coordinates);
+        let popup = new mapboxgl.Popup({ offset: 45});
+        popup.setHTML(foodPlaceList.listOfFoodPlaces[i].placeLabel);
+        marker.setPopup(popup)
+        marker.addTo(map);
+        popup.addTo(map);
+    }
+}
+
+// // When screen is resized
+// function onScreenResize() {
+//     map.update();
+// }
+
+showFoodPlaces();
+
+
 
