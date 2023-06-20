@@ -1,7 +1,7 @@
 "use strict "
 const FOOD_LIST_KEY = "foodListKey";
 const MAPBOX_TOKEN = "pk.eyJ1IjoiYWFycm9vbiIsImEiOiJjbGNrNXFhZnUwNXVyM25teHJ6MmJ4enQ4In0.gAHuVBrY2F7BRecWiDQlgA";
-const GEOCODE_TOKEN = '18d4bb5124ea434291f1c92ff6a4f916';
+const GEOCODE_TOKEN = '6e259ebba2d44c27be2292662fbc08f3';
 
 class FoodPlace {
 // Constructor
