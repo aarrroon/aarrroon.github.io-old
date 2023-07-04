@@ -1,12 +1,87 @@
-body {
-    margin: 0px;
-    color: #21130d;
-    text-align: center;
+html {
+	scroll-behavior: smooth;
 }
 
-/* Section Hero */
+body {
+    margin: 0px;
+    color: #efe7e7;
+    text-align: center;
+    cursor: url('images/cursor.png'), auto;
+
+}
+
+p {
+    font-family: 'Source Sans 3', sans-serif;
+}
+
+.title {
+    font-family: 'Roboto Condensed', sans-serif;
+    margin: 0;
+    margin-bottom: 30px;
+}
+
+/* ------------ Progress Bar */
+#progress-bar {
+    height: 8px;
+    background: #FF4B4B;
+    width: 0%;
+    position: fixed;
+    top: 45px;
+    z-index: 1;
+}
+
+/* ------------ Header */
+.header-nav {
+    background-color: #081938;
+    overflow: hidden;
+    font-family: 'Montserrat', sans-serif;
+    color: #f2f2f2;
+    position: fixed;
+    width: 100%;
+    z-index: 20;
+}
+
+.header-nav a {
+    float: right;
+    color: #f2f2f2;
+    text-align: center;
+    text-decoration: none;
+    font-size: 19px;
+    padding: 10px;
+
+}
+
+.header-nav a:hover {
+    background-color: #4c575c;
+}
+
+.header-nav a img {
+    width: 17px;
+    padding-right: 3px;
+}
+
+.header-nav a.split {
+    float: left;
+    color: white;
+    font-weight: bold;
+}
+
+.anchor {
+    display: block;
+    position: relative;
+    top: -40px;
+    visibility: hidden;
+}
+
+/* ------------ Section Hero */
 #section-hero {
-    background-color: #fec89a;
+    background-image: url('images/background2.jpg');
+    /* background-image: #fec89a; */
+    height: 100vh;
+    background-repeat: no-repeat;
+    /* Do not repeat the image */
+    background-size: cover;
+
 
 }
 
@@ -21,31 +96,50 @@ body {
 
 #aaron {
     margin-top: 0;
-}
-
-.title {
-    font-family: 'Roboto Condensed', sans-serif;
-    margin: 0;
+    color: #f2f2f2;
+    -webkit-animation: focus-in-expand 0.9s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.1s both;
+    animation: focus-in-expand 0.9s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.3s both;
 }
 
 #education {
     font-family: 'Montserrat', sans-serif;
     margin: 10px;
+    color: #f2f2f2;
+    -webkit-animation: focus-in-expand 0.9s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.6s both;
+    animation: focus-in-expand 0.9s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.9s both;
 }
 
 /* Section Body */
 .section-body {
-    height: 100vh;
-    padding-top: 30px;
+    padding: 60px 0px;
 }
 
-#section-body-one {
-    background-color: #fdfdfd;
+/* ---------- About Section */
+/* About Text */
+#about-text {
+    font-size: 1.5em;
 }
 
-/* Section Body Two */
-#section-body-two {
-    background-color: #FEDEC2;
+/* Circular Image */
+.circle {
+    border-radius: 50%;
+}
+
+
+
+#section-about {
+    background-image: linear-gradient(#f6a4a8, #A5ABCD);
+    /* background-image: #fec89a; */
+
+}
+
+#portrait {
+    z-index: auto;
+}
+
+/* ------------ Skills Section */
+#section-skills {
+    background-image: linear-gradient(#A5ABCD, #5C6FA1);
 }
 
 /* Cards */
@@ -55,19 +149,29 @@ body {
     padding: 20px 0 20px 0;
 }
 
+
+.row.card-container {
+    padding: 20px 0 20px 0;
+    justify-content: space-between;
+}
+
 .card {
-    width: 250px;
+    width: 200px;
     height: 150px;
     background-color: white;
     box-shadow: 0 0 5px #21130d;
     padding-top: 20px;
+    justify-content: center;
+    align-items: center;
+    color: #21130d;
 
 
 }
 
 .card img {
-    height: 72px;
+    width: 70px;
     padding-bottom: 30px;
+
 }
 
 .card h5 {
@@ -97,15 +201,7 @@ body {
     border-bottom: 4px solid #68dcfc;
 }
 
-/* Progress Bar */
-#progress-bar {
-    height: 8px;
-    background: #FF4B4B;
-    width: 0%;
-    position: fixed;
-    top: 43.3px;
-    z-index: 1;
-}
+
 
 /* Footer */
 .footer-nav {
@@ -121,6 +217,7 @@ body {
     font-weight: 400;
     padding: 13px;
     margin: 0;
+    font-size: 0.7em;
 }
 
 #footer-icons {
@@ -146,44 +243,74 @@ body {
 
 }
 
-/* Header */
-.header-nav {
-    background-color: #333;
-    overflow: hidden;
-    font-family: 'Montserrat', sans-serif;
-    color: #f2f2f2;
-    position: fixed;
-    width: 100%;
+/* ------------- Animations */
+.hidden {
+    opacity: 0;
+    transition: all 1s;
+    transform: translateX(-30%);
+    filter: blur(3px);
 }
 
-.header-nav a {
-    float: right;
-    color: #f2f2f2;
-    text-align: center;
-    text-decoration: none;
-    font-size: 19px;
-    padding: 10px;
-
+.show {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(0);
 }
 
-.header-nav a:hover {
-    background-color: #4c575c;
+.logo:nth-child(2) {
+    transition-delay: 300ms;
 }
 
-.header-nav a img {
-    height: 17px;
-    padding-right: 3px;
+.logo:nth-child(3) {
+    transition-delay: 600ms;
 }
 
-.header-nav a.split {
-    float: left;
-    color: white;
-    font-weight: bold;
+.cardr1:nth-child(1) {
+    transition-delay: 000ms;
 }
 
-.anchor {
-    display: block;
-    position: relative;
-    top: -40px;
-    visibility: hidden;
+.cardr1:nth-child(2) {
+    transition-delay: 800ms;
+}
+
+.cardr1:nth-child(3) {
+    transition-delay: 900ms;
+}
+
+.cardr2:nth-child(2) {
+    transition-delay: 200ms;
+}
+
+
+
+
+/* Expand */
+@-webkit-keyframes focus-in-expand {
+    0% {
+        letter-spacing: -0.5em;
+        -webkit-filter: blur(12px);
+        filter: blur(12px);
+        opacity: 0;
+    }
+
+    100% {
+        -webkit-filter: blur(0px);
+        filter: blur(0px);
+        opacity: 1;
+    }
+}
+
+@keyframes focus-in-expand {
+    0% {
+        letter-spacing: -0.5em;
+        -webkit-filter: blur(12px);
+        filter: blur(12px);
+        opacity: 0;
+    }
+
+    100% {
+        -webkit-filter: blur(0px);
+        filter: blur(0px);
+        opacity: 1;
+    }
 }
