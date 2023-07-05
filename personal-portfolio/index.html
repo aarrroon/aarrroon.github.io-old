@@ -24,7 +24,7 @@
 		<div class="header-nav">
 			<a href="#hero" class="split"><img src="images/home.png" width="15px">&nbsp&nbspA. Tran</a>
 
-			<a href="#news" class="header-icon"><img src="images/project.png">Projects</a>
+			<a href="#projects" class="header-icon"><img src="images/project.png">Projects</a>
 			<a href="#skills" class="header-icon" target="_parent"><img src="images/skills.png">Skills</a>
 			<a href="#about" class="header-icon"><img src="images/person.png">About</a>
 
@@ -93,26 +93,26 @@
 		<!-- Cards -->
 		<div class="container">
 			<div class="row">
-				<div class="col d-flex justify-content-center py-3">
-					<div class="hidden cardr1">
+				<div class="col d-flex justify-content-center py-3 hidden scard">
+					<div class="">
 						<div class="card" id="html">
 							<img src="images/html.png">
 							<h5>HTML 5</h5>
 						</div>
 					</div>
 				</div>
-				<div class="col d-flex justify-content-center py-3">
-					<div class="hidden cardr1">
-						<div class="card hidden cardr1" id="css">
+				<div class="col d-flex justify-content-center py-3 hidden scard">
+					<div class="hidden">
+						<div class="card" id="css">
 							<img src="images/css.png">
 							<h5>CSS 3</h5>
 						</div>
 					</div>
 
 				</div>
-				<div class="col d-flex justify-content-center py-3">
+				<div class="col d-flex justify-content-center py-3 hidden scard">
 					<div class="hidden cardr1">
-						<div class="card hidden cardr1" id="js">
+						<div class="card cardr1" id="js">
 							<img src="images/js.png">
 							<h5>JavaScript</h5>
 						</div>
@@ -120,19 +120,105 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col d-flex justify-content-center py-3">
-					<div class="card hidden cardr2" id="python">
+				<div class="col d-flex justify-content-center py-3 hidden scard">
+					<div class="card cardr2" id="python">
 						<img src="images/python.png">
 						<h5>Python 3</h5>
 					</div>
 				</div>
-				<div class="col d-flex justify-content-center py-3">
-					<div class="card hidden cardr2" id="react">
+				<div class="col d-flex justify-content-center py-3 hidden scard">
+					<div class="card cardr2" id="react">
 						<img src="images/react.png">
 						<h5>React</h5>
 					</div>
 				</div>
 
+			</div>
+		</div>
+	</div>
+
+	<!-- Projects -->
+	<a id="projects" class="anchor"></a>
+	<div id="section-projects" class="section-body">
+		<h2 class="title hidden">My Projects</h2>
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-4 col-12 d-flex justify-content-center hidden pcard flip-card">
+					<div class="flip-card-inner">
+						<div class="flip-card-front">
+							<div class="card project-card">
+								<div class="py-1">
+									<img src="images/google-calendar-pay-calculator.png" width="150px" class="py-2">
+								</div>
+								<div class="card-body py-1">
+									<h6 class="card-title my-3">Google Calendar Pay Calculator</h6>
+								</div>
+							</div>
+						</div>
+						<div class="flip-card-back">
+							<div class="card project-card d-flex flex-column align-items-center">
+								<p class="project-details">
+									An application was created which acquires any work shifts from the Google Calendar and calculates 
+									the after-tax pay of each fortnightly payslip.
+									<br>
+									<br>
+									Involves the use of the Google Calendar API, Tkinter for the GUI and extensive knowledge of the datettime 
+									inbuilt module. 
+								</p>
+								<a href="#" class="btn btn-outline-primary project-btn">Details</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-12  d-flex justify-content-center hidden pcard flip-card">
+					<div class="flip-card-inner">
+						<div class="flip-card-front">
+							<div class="card project-card">
+								<div class="py-1">
+									<img src="images/date-map.png" width="150px" class="py-2">
+								</div>
+								<div class="card-body py-1">
+									<h6 class="card-title my-3">Date Map</h6>
+								</div>
+							</div>
+						</div>
+						<div class="flip-card-back">
+							<div class="card project-card d-flex flex-column align-items-center">
+								<p class="project-details">
+									A web-based application that aims to save a collection of date activities such as good restaurants.
+									Places can be viewed on a map or as a list and can be sorted based on price.
+									<br>
+									<br>
+									Involves the use of MapBox and GeoCoding APIs. 
+								</p>
+								<a href="#" class="btn btn-outline-primary project-btn">Details</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-12 d-flex justify-content-center hidden pcard flip-card">
+					<div class="flip-card-inner">
+						<div class="flip-card-front">
+							<div class="card project-card">
+								<div class="py-1">
+									<img src="images/elden-rings.png" width="150px" class="py-2">
+								</div>
+								<div class="card-body py-1">
+									<h6 class="card-title my-3">Textbased Elden Rings</h6>
+								</div>
+							</div>
+						</div>
+						<div class="flip-card-back">
+							<div class="card project-card d-flex flex-column align-items-center">
+								<p class="project-details">
+									Working together with other developers to develop a rogue-likegame based on Elden Rings.
+									It was written in Java with a strong emphasis on Object Oriented Programming Principles.
+								</p>
+								<a href="#" class="btn btn-outline-primary project-btn">Details</a>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
