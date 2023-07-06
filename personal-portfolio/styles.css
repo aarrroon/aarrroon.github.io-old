@@ -156,8 +156,8 @@ p {
 }
 
 .card {
-    width: 200px;
-    height: 150px;
+    width: 230px;
+    height: 175px;
     background-color: white;
     box-shadow: 0 0 5px #21130d;
     padding-top: 20px;
@@ -182,7 +182,7 @@ p {
 }
 
 #html {
-    border-bottom: 4px solid #f16529;
+    border-bottom: 4px solid #f19e29;
 }
 
 #css {
@@ -223,7 +223,13 @@ p {
     margin-bottom: 20px;
 }
    
-
+.card .project-skill-icons {
+    width: 30px;
+    align-self: flex-end;
+    padding: 0;
+    margin-bottom: 10px;
+    margin-right: 10px;
+}
 
 /* Footer */
 .footer-nav {
