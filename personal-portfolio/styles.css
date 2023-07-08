@@ -55,6 +55,10 @@ p {
     background-color: #4c575c;
 }
 
+#resume:hover {
+    background-color: #cb8181;
+}
+
 .header-nav a img {
     width: 17px;
     padding-right: 3px;
@@ -164,8 +168,12 @@ p {
     justify-content: center;
     align-items: center;
     color: #21130d;
+    transition: transform 0.3s ease;
+}
 
-
+.card:hover {
+    transform: scale(1.1);
+    background-color: #fceeee;
 }
 
 .card img {
@@ -205,6 +213,7 @@ p {
 #section-projects {
     background-image: linear-gradient(#5C6FA1, #DB5461);
     height: auto;
+    padding-bottom: 200px;
 }
 
 .project-card {
@@ -222,7 +231,7 @@ p {
 .project-btn {
     margin-bottom: 20px;
 }
-   
+
 .card .project-skill-icons {
     width: 30px;
     align-self: flex-end;
@@ -230,6 +239,62 @@ p {
     margin-bottom: 10px;
     margin-right: 10px;
 }
+
+/* Modal */
+/* The Modal (background) */
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: #8a8d8f;
+    margin: 15% auto;
+    /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 60%;
+    /* Could be more or less, depending on screen size */
+    
+}
+
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.caption-margin {
+    padding: 202px, 0, 1000px, 0;
+}
+
 
 /* Footer */
 .footer-nav {
@@ -366,7 +431,7 @@ p {
     height: 300px;
     background-color: transparent;
     margin-top: 30px;
-    
+
     /* Remove this if you don't want the 3D effect */
 }
 

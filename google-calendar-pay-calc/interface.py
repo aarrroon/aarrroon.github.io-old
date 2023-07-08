@@ -22,6 +22,7 @@ def update_googcal_ui(payslip):
 # Add shift to the Google Calendar
 def add_shifts_to_gc_ui():
     add_shift_window = Toplevel()
+    add_shift_window.iconbitmap('icon.ico')
     shifts_to_add = []
 
     # header
@@ -83,6 +84,7 @@ def add_shifts_to_gc_ui():
 def choose_payslip(function_to_do):
     payslip_window = Toplevel(width=50)
     payslip_window.geometry("400x550")
+    payslip_window.iconbitmap('icon.ico')
     chosen_payslip_index = IntVar()
     payslip_list = calendar.list_payslip_dates()
 
@@ -109,12 +111,13 @@ def choose_payslip(function_to_do):
 
 def open_tax_window():
     tax_window = Toplevel()
+    tax_window.iconbitmap('icon.ico')
     # header
-    customtkinter.CTkLabel(tax_window, text="Add a Shift").grid(row=0, columnspan=2)
+    customtkinter.CTkLabel(tax_window, text="Calculate Tax").grid(row=0, columnspan=2)
 
     # add text-fields
     income_label = customtkinter.CTkLabel(tax_window, text="Gross Income: ")
-    income_entry = customtkinter.CTkEntry(tax_window, width=30)
+    income_entry = customtkinter.CTkEntry(tax_window, width=100)
 
     def calculate_tax():
         gross_income = int(income_entry.get())
@@ -124,20 +127,21 @@ def open_tax_window():
 
     # buttons
     calculate_btn = customtkinter.CTkButton(tax_window, text="Calculate Tax", command=calculate_tax)
-    finish_btn = customtkinter.CTkButton(tax_window, text="Finished", command=tax_window.destroy)
+    finish_btn = customtkinter.CTkButton(tax_window, text="Finished", command=tax_window.destroy, width=50)
 
     # display console
-    tax_console_frame = customtkinter.CTkLabelFrame(tax_window)
+    tax_console_frame = customtkinter.CTkFrame(tax_window)
     tax_console_frame.grid(row=3, columnspan=3, sticky=N + W + S + E, padx=10, pady=10)
 
-    income_display = customtkinter.CTkLabel(tax_console_frame)
+    income_display = customtkinter.CTkLabel(tax_console_frame, height=100)
     income_display.grid()
+    income_display.configure(text="")
 
     # Packing
-    income_label.grid(row=1, column=0)
-    income_entry.grid(row=1, column=1, columnspan=2)
-    calculate_btn.grid(row=2, column=1)
-    finish_btn.grid(row=2, column=2)
+    income_label.grid(row=1, column=0, padx=20)
+    income_entry.grid(row=1, column=1, columnspan=2, padx=20)
+    calculate_btn.grid(row=2, column=1, padx=15, pady=10)
+    finish_btn.grid(row=2, column=2, padx=15, pady=10)
 
 
 #
