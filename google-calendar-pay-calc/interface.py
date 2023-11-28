@@ -210,40 +210,71 @@ def create_template():
     root.mainloop()
 
 def open_settings():
+    def pre_load_settings():
+        if PaySettings.settings_exist():
+            event_name = PaySettings.name()
+            payslip_frequency = PaySettings.frequency()
+            base_pay = PaySettings.get_pay_table()['ordinary']
+            return (event_name, payslip_frequency, base_pay)
+        else:
+            return ('','','')
+
+    def save_settings():
+        # obtain inputs 
+        event_name = event_name_entry.get()
+        payslip_frequency = pay_frequency_entry.get()
+        
+        base_rate = int(base_rate_entry.get())
+        pay_table = pay_table = {
+            'ordinary': base_rate,
+            'sunday': 0,
+            'saturday': 0,
+            'evening': 41.50,
+            'publicHoliday': 86.25
+        }
+        # save to YAML file
+        PaySettings.save_settings(event_name, payslip_frequency, pay_table)
+        settings_window.destroy()
+    
     settings_window = Toplevel()
     settings_window.iconbitmap('icon.ico')
 
     # header
     customtkinter.CTkLabel(settings_window, text="Settings", font=("Garamond", 30)).grid(row=0, columnspan=2)
+
+    # obtain previous settings if found
+    event_name, payslip_frequency, base_pay = pre_load_settings()
+
     # add text-fields
     event_name_label = customtkinter.CTkLabel(settings_window, text="Calendar Event Name", padx=5, pady=5)
     event_name_entry = customtkinter.CTkEntry(settings_window, width=150)
+    event_name_entry.insert(0, event_name)
 
     base_rate_label = customtkinter.CTkLabel(settings_window, text="Base Rate", padx=5, pady=5)
     base_rate_entry = customtkinter.CTkEntry(settings_window, width=150)
+    base_rate_entry.insert(0, base_pay)
 
     pay_frequency_label = customtkinter.CTkLabel(settings_window, text="Pay Frequency", padx=5, pady=5)
     pay_frequency_entry = customtkinter.CTkEntry(settings_window, width=150)
-
-    def pre_load_settings():
-        pass
+    pay_frequency_entry.insert(0, payslip_frequency)
 
     # button
     add_btn = customtkinter.CTkButton(settings_window, text="Cancel", command=settings_window.destroy)
-    finish_btn = customtkinter.CTkButton(settings_window, text="Save") #save command
+    finish_btn = customtkinter.CTkButton(settings_window, text="Save", command=save_settings) 
 
     # pack onto screen
     event_name_label.grid(row=1, column=0, padx=10, pady=10)
     event_name_entry.grid(row=1, column=1, columnspan=2, padx=10, pady=10)
 
-    base_rate_label.grid(row=2, column=0, padx=10, pady=10)
-    base_rate_entry.grid(row=2, column=1, columnspan=2, padx=10, pady=10)
+    pay_frequency_label.grid(row=2, column=0, padx=10, pady=10)
+    pay_frequency_entry.grid(row=2, column=1, columnspan=2, padx=10, pady=10)
 
-    pay_frequency_label.grid(row=3, column=0, padx=10, pady=10)
-    pay_frequency_entry.grid(row=3, column=1, columnspan=2, padx=10, pady=10)
+    base_rate_label.grid(row=1, column=3, padx=10, pady=10)
+    base_rate_entry.grid(row=1, column=4, columnspan=2, padx=10, pady=10)
 
     add_btn.grid(row=4, column=1, padx=10, pady=10)
     finish_btn.grid(row=4, column=2, padx=10, pady=10)
+
 
 if __name__ == '__main__':
     """

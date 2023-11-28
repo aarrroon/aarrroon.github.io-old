@@ -2,23 +2,28 @@ import holidays
 import re
 import argparse
 import sys
+import os
 
 from gcsa.google_calendar import GoogleCalendar
 from gcsa.event import Event
 from typing import Union, List, Tuple, Dict
 from math import ceil
 from datetime import datetime, timedelta, date
+import yaml
 
 """
 External Packages:
 - holidays
 - Google Calendar Simple API (gcsa)
--
+- PyYaml
+
 Built-in Packages:
 - datetime
 - math
 - re
 - parser
+- sys
+
 """
 """
 Weekday - $187.50
@@ -28,10 +33,6 @@ Sunday - $270
 
 """
 
-
-"""
-TODO: change the structure of everything needing to contain a Calendar instance.
-"""
 class Payslip:
     """
     Class representing a payslip, which contains information about the shifts within one, the number of hours worked
@@ -42,7 +43,6 @@ class Payslip:
         Constructor.
         :param end_date: the last day of a payslip, to distinguish it from other payslips.
         """
-        # Create settings
         self.end_date = end_date
         # The shifts worked that is included in this payslip
         self.shifts = self.add_shifts()
@@ -52,12 +52,10 @@ class Payslip:
         self.pay = FinancialUtilities.calculate_pay(self, PaySettings.frequency())
         
         
-
-
     def extract_hours(self) -> Dict[str, int]:
         """
         Returns the different hours worked in a payslip.
-        Includes:
+        May include:
             - public holiday hours
             - Saturday hours
             - Sunday hours
@@ -73,8 +71,9 @@ class Payslip:
             'evening': 0,
             'publicHoliday': 0
         }
+        # obtain current year
         curr_year = datetime.now().year
-        # get a list of holidays
+        # get a list of holidays for this year
         holidays_list = holidays.country_holidays('AU', subdiv='VIC', years=curr_year, expand=False)
         # for each shift, categorise how many hours was worked
         for shift in self.shifts:
@@ -82,7 +81,8 @@ class Payslip:
             duration = shift.end - shift.start
             seconds_in_hour = 60 * 60
             shift_hours = duration.total_seconds() / seconds_in_hour
-            if shift_hours > 8:
+            # if shift includes unpaid lunch break
+            if shift_hours >= 7:
                 shift_hours -= 1
 
             # when evening pay starts
@@ -106,7 +106,7 @@ class Payslip:
                 if shift_hours > 5:
                     payslip_hours['evening'] -= 0.5
 
-                    # else if shift is the basic pay
+            # else if shift is the basic pay
             else:
                 payslip_hours['ordinary'] += shift_hours
         return payslip_hours
@@ -163,7 +163,6 @@ class FinancialUtilities:
     """
     Class encapsulating static utility functions involving calculating pay and taxes.
     """
-
     @staticmethod
     def calculate_pay(self, frequency_mult: int) -> dict[str, Union[int, float]]:
         """
@@ -171,13 +170,7 @@ class FinancialUtilities:
         obtain pay after-tax.
         :return: ['net_income': int, 'tax': int]
         """
-        pay = {
-            'ordinary': 34.58,
-            'sunday': 0,
-            'saturday': 0,
-            'evening': 41.50,
-            'publicHoliday': 86.25
-        }
+        pay = PaySettings.get_pay_table()
         total_income = pay['ordinary'] * self.hours['ordinary'] + \
                        self.hours['sunday'] * pay['sunday'] + \
                        self.hours['saturday'] * pay['saturday'] + \
@@ -383,6 +376,7 @@ class Application:
         self.google_calendar = calendar
         # The chosen payslip by the user
         self.selected_payslip = None
+        PaySettings.load_settings()
 
     def obtain_args(self) -> argparse.Namespace:
         """
@@ -460,31 +454,30 @@ class Application:
         return Payslip(self.selected_payslip)
 
 class PaySettings:
-    _instance = None
-
     # Class variables
     payslip_frequency = "weekly"
     event_name = 'NAB'
+    pay_table = {
+            'ordinary': 34.58,
+            'sunday': 0,
+            'saturday': 0,
+            'evening': 41.50,
+            'publicHoliday': 86.25
+        }
 
     evening_rate_start = None
     evening_rate_flag = None
     saturday_rate_flag = None
     sunday_rate_flag = None
 
-    def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super(PaySettings, cls).__new__(cls)
-            # Initialization code goes here
-        return cls._instance
-
-    def evening_rates_allowed(self):
-        return self.evening_rate_flag
+    # def evening_rates_allowed(self):
+    #     return self.evening_rate_flag
     
-    def saturday_rates_allowed(self):
-        return self.saturday_rate_flag
+    # def saturday_rates_allowed(self):
+    #     return self.saturday_rate_flag
 
-    def sunday_rates_allowed(self):
-        return self.sunday_rate_flag
+    # def sunday_rates_allowed(self):
+    #     return self.sunday_rate_flag
     
     @classmethod
     def name(cls):
@@ -499,7 +492,36 @@ class PaySettings:
         }
         return frequency_table[cls.payslip_frequency]
     
+    @classmethod
+    def save_settings(cls, event_name: str, payslip_frequency: str, pay_table: Dict[str, int]):
+        name_data = {'event_name': event_name}
+        frequency_data = {'payslip_frequency': payslip_frequency}
+        # save to yaml file
+        with open('settings.yaml', 'w') as file:
+            yaml.dump(name_data, file)
+            yaml.dump(pay_table, file)
+            yaml.dump(frequency_data, file)
+        cls.load_settings()
     
+    @classmethod
+    def load_settings(cls):
+        with open('settings.yaml', 'r') as file:
+            loaded_settings = yaml.safe_load(file)
+            cls.payslip_frequency = loaded_settings['payslip_frequency']
+            cls.evening_name = loaded_settings['event_name']
+            for hourly_type in ('evening', 'ordinary', 'publicHoliday', 'saturday', 'sunday'):
+                cls.pay_table[hourly_type] = loaded_settings[hourly_type]
+
+    @classmethod
+    def get_pay_table(cls):
+        return cls.pay_table
+    
+    @classmethod
+    def settings_exist(cls):
+        file_name = 'settings'
+        return os.path.isfile(file_name) and file_name.lower().endswith('.yaml')
+
+
 
 class ConsoleDisplay:
     """
@@ -570,6 +592,7 @@ class ConsoleDisplay:
     @staticmethod
     def println(string: str) -> None:
         print(string)
+
 if __name__ == '__main__':
     """
     --shifts:
