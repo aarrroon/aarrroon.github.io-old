@@ -121,7 +121,7 @@ def open_tax_window():
 
     def calculate_tax():
         gross_income = int(income_entry.get())
-        aft_tax_inc = FinancialUtilities.calculate_tax(gross_income)
+        aft_tax_inc = FinancialUtilities.calculate_tax(gross_income, PaySettings().frequency())
         display = f"Net Income: ${aft_tax_inc['net_income']}; Tax: ${aft_tax_inc['tax']}"
         income_display.configure(text=display)
 
@@ -160,7 +160,7 @@ def create_template():
     root.title('Google Calendar Pay Calculator')
     root.iconbitmap('icon.ico')
     # Change default size of window
-    root.geometry("660x600")
+    root.geometry("600x600")
     # Custom UI Settings
     customtkinter.set_appearance_mode("Light")  # Modes: "System" (standard), "Dark", "Light"
     customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -182,9 +182,14 @@ def create_template():
     button3 = customtkinter.CTkButton(root, text="Update the last, current and the next 2 payslips", 
                      command=lambda: update_googcal_ui(None))
     button4 = customtkinter.CTkButton(root, text="Add a shift to the Google Calendar",  command=add_shifts_to_gc_ui)
-    button5 = customtkinter.CTkButton(root, text="Calculate tax withheld of a fortnightly amount",  command=open_tax_window)
+    button5 = customtkinter.CTkButton(root, text="Calculate Tax Withheld",  command=open_tax_window)
     button6 = customtkinter.CTkButton(root, text="Exit",  command=root.destroy)
+    # settings
+    button7 = customtkinter.CTkButton(root, text="Settings",  command=open_settings)
+
+    # display label
     label1 = customtkinter.CTkLabel(root, text="Display", font=("Garamond", 25), padx=10, pady=10)
+    # display screen
     console_frame = customtkinter.CTkFrame(root)
     global console_display
     console_display = customtkinter.CTkLabel(console_frame, text="", padx=10, pady=10, height=340)
@@ -196,13 +201,49 @@ def create_template():
     button3.grid(row=3, column=0, sticky=N + S + E + W, padx=20, pady=5)
     button4.grid(row=1, column=1, sticky=N + S + E + W, padx=20, pady=5)
     button5.grid(row=2, column=1, sticky=N + S + E + W, padx=20, pady=5)
-    button6.grid(row=3, column=1, sticky=N + S + E + W, padx=20, pady=5)
-    console_frame.grid(rowspan=5, columnspan=2,  sticky=N + W + E + S, row=5, padx=10, pady=10)
-    label1.grid(row=4, columnspan=2)
+    button7.grid(row=3, column=1, sticky=N + S + E + W, padx=20, pady=5)
+    button6.grid(row=4, column=1, sticky=N + S + E + W, padx=20, pady=5)
+    console_frame.grid(rowspan=6, columnspan=2,  sticky=N + W + E + S, row=5, padx=10, pady=10)
+    label1.grid(row=5, columnspan=2)
     console_display.pack()
 
     root.mainloop()
 
+def open_settings():
+    settings_window = Toplevel()
+    settings_window.iconbitmap('icon.ico')
+
+    # header
+    customtkinter.CTkLabel(settings_window, text="Settings", font=("Garamond", 30)).grid(row=0, columnspan=2)
+    # add text-fields
+    event_name_label = customtkinter.CTkLabel(settings_window, text="Calendar Event Name", padx=5, pady=5)
+    event_name_entry = customtkinter.CTkEntry(settings_window, width=150)
+
+    base_rate_label = customtkinter.CTkLabel(settings_window, text="Base Rate", padx=5, pady=5)
+    base_rate_entry = customtkinter.CTkEntry(settings_window, width=150)
+
+    pay_frequency_label = customtkinter.CTkLabel(settings_window, text="Pay Frequency", padx=5, pady=5)
+    pay_frequency_entry = customtkinter.CTkEntry(settings_window, width=150)
+
+    def pre_load_settings():
+        pass
+
+    # button
+    add_btn = customtkinter.CTkButton(settings_window, text="Cancel", command=settings_window.destroy)
+    finish_btn = customtkinter.CTkButton(settings_window, text="Save") #save command
+
+    # pack onto screen
+    event_name_label.grid(row=1, column=0, padx=10, pady=10)
+    event_name_entry.grid(row=1, column=1, columnspan=2, padx=10, pady=10)
+
+    base_rate_label.grid(row=2, column=0, padx=10, pady=10)
+    base_rate_entry.grid(row=2, column=1, columnspan=2, padx=10, pady=10)
+
+    pay_frequency_label.grid(row=3, column=0, padx=10, pady=10)
+    pay_frequency_entry.grid(row=3, column=1, columnspan=2, padx=10, pady=10)
+
+    add_btn.grid(row=4, column=1, padx=10, pady=10)
+    finish_btn.grid(row=4, column=2, padx=10, pady=10)
 
 if __name__ == '__main__':
     """

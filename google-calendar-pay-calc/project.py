@@ -42,13 +42,18 @@ class Payslip:
         Constructor.
         :param end_date: the last day of a payslip, to distinguish it from other payslips.
         """
+        # Create settings
+        self.settings = PaySettings()
         self.end_date = end_date
         # The shifts worked that is included in this payslip
         self.shifts = self.add_shifts()
         # The different hours and respective loading e.g. Saturday hours or ordinary hours
         self.hours = self.extract_hours()
         # The gross income and tax as a tupple
-        self.pay = FinancialUtilities.calculate_pay(self)
+        self.pay = FinancialUtilities.calculate_pay(self, self.settings.frequency())
+        
+        
+
 
     def extract_hours(self) -> Dict[str, int]:
         """
@@ -78,8 +83,8 @@ class Payslip:
             duration = shift.end - shift.start
             seconds_in_hour = 60 * 60
             shift_hours = duration.total_seconds() / seconds_in_hour
-            if shift_hours == 8:
-                shift_hours = 7.5
+            if shift_hours > 8:
+                shift_hours -= 1
 
             # when evening pay starts
             evening_pay_time = datetime(shift.end.year, shift.end.month, shift.end.day, hour=18,
@@ -115,7 +120,7 @@ class Payslip:
 
         output = f"""This is for the payslip ending on {self.end_date} 
             \nHours: {self.hours}
-            \nThe number of shifts worked this fortnight is: {len(self.shifts)} 
+            \nThe number of shifts worked this payslip is: {len(self.shifts)} 
             \nGross Income: ${self.pay['net_income']:02} and Tax is ${self.pay['tax']}.00
             """
         return output
@@ -125,14 +130,15 @@ class Payslip:
         Allocates shifts to the payslip by searching the calendar
         :return:
         """
-        fortnight = timedelta(days=14)
+        frequency_mult = self.settings.frequency()
+        period = timedelta(days=7*frequency_mult)
         end_date = datetime.fromisoformat(self.end_date)
-        start_date = end_date + timedelta(days=1) - fortnight
+        start_date = end_date + timedelta(days=1) - period
 
         google_calendar = GoogleCalendar(credentials_path='credentials.json')
         events_in_week = google_calendar.get_events(start_date, end_date + timedelta(days=1), order_by='updated')
         # updates shift attribute in Payslip
-        return [event for event in events_in_week if event.summary == "IKEA"]
+        return [event for event in events_in_week if event.summary == self.settings.name()]
 
     def print_shifts(self) -> None:
         """
@@ -158,32 +164,33 @@ class FinancialUtilities:
     """
     Class encapsulating static utility functions involving calculating pay and taxes.
     """
+
     @staticmethod
-    def calculate_pay(self) -> dict[str, Union[int, float]]:
+    def calculate_pay(self, frequency_mult: int) -> dict[str, Union[int, float]]:
         """
         Calculates the total pay from the shifts worked in the fortnight. Calls on 'calculate_tax()' to
         obtain pay after-tax.
         :return: ['net_income': int, 'tax': int]
         """
         pay = {
-            'ordinary': 24.93,
-            'sunday': 37.39,
-            'saturday': 31.16,
-            'evening': 31.16,
-            'publicHoliday': 56.09
+            'ordinary': 34.58,
+            'sunday': 0,
+            'saturday': 0,
+            'evening': 41.50,
+            'publicHoliday': 86.25
         }
         total_income = pay['ordinary'] * self.hours['ordinary'] + \
                        self.hours['sunday'] * pay['sunday'] + \
                        self.hours['saturday'] * pay['saturday'] + \
                        self.hours['evening'] * pay['evening'] + \
                        self.hours['publicHoliday'] * pay['publicHoliday']
-        return FinancialUtilities.calculate_tax(total_income)
+        return FinancialUtilities.calculate_tax(total_income, frequency_mult)
 
     @staticmethod
-    def calculate_tax(fortnightly_income: float) -> Dict[str, Union[int ,float]]:
+    def calculate_tax(income: float, frequency_mult: int) -> Dict[str, Union[int ,float]]:
         """
         Calculates the tax withheld and income after tax
-        :param fortnightly_income:
+        :param: income
         :return: tuple where (tax withheld, income after tax)
         """
         # Australian Tax Table for 2022-2023
@@ -192,12 +199,12 @@ class FinancialUtilities:
             359: [0, 0],
             438: [0.19, 68.3462],
             548: [0.29, 112.1942],
-            721: [0.21, 68.3465],
+            721: [0.2190, 68.3465],
             865: [0.2190, 74.8369],
             1282: [0.3477, 186.2119],
-            2307: [0.34, 182.7504]
+            2307: [0.345, 182.7504]
         }
-        weekly_income = fortnightly_income / 2
+        weekly_income = income / frequency_mult
 
         # calculating coefficients for different income brackets
         if weekly_income < 359:
@@ -215,8 +222,8 @@ class FinancialUtilities:
         elif weekly_income < 2307:
             a, b = tax_table[2307]
         # tax withheld in a fortnight
-        tax_withheld = ceil((a * weekly_income - b) * 2)
-        return {'tax': tax_withheld, 'net_income': round(fortnightly_income - tax_withheld, 2)}
+        tax_withheld = ceil((a * (weekly_income + 0.99) - b) * frequency_mult)
+        return {'tax': tax_withheld, 'net_income': round(income - tax_withheld, 2)}
 
 
 class Calendar:
@@ -228,6 +235,8 @@ class Calendar:
         """
         Constructor
         """
+        # Create settings
+        self.settings = PaySettings()
         # Google Calendar using the API
         self.google_calendar = GoogleCalendar(credentials_path='credentials.json')
         # List of significant payslips
@@ -240,13 +249,14 @@ class Calendar:
         """
         base = date.fromisoformat(base_date_temp)
         today = date.today()
-        # scaling the base to 1 fortnight behind today
-        while (today - base).days > 28:
-            base += timedelta(days=14)
+        frequency_mult = self.settings.frequency()
+        # scaling the base to 1 payslip behind today
+        while (today - base).days > (14 * frequency_mult):
+            base += timedelta(days = 7 * frequency_mult)
 
         output = []
         for i in range(10):
-            interval = timedelta(days=14 * i)
+            interval = timedelta(days= 7 * frequency_mult * i)
             output.append((base + interval).isoformat())
         return output
 
@@ -361,7 +371,7 @@ class Calendar:
             shift_hour, shift_min, shift_length = int(match.group(4)), int(match.group(5)), int(match.group(6))
             start_time = datetime(shift_year, shift_month, shift_day, hour=shift_hour, minute=shift_min)
             end_time = start_time + timedelta(hours=shift_length)
-            event = Event('IKEA', start=start_time, end=end_time)
+            event = Event("NAB", start=start_time, end=end_time)
             return event
         return None
 
@@ -404,7 +414,7 @@ class Application:
             ui = ConsoleDisplay()
             while True:
                 action = ui.choose_action()
-                if action not in (3, 4, 5):
+                if action not in (3, 4, 5, 6):
                     payslip = ui.choose_selected_payslip(calendar)
 
                 match action:
@@ -426,7 +436,7 @@ class Application:
                         income = FinancialUtilities.calculate_tax(gross_income)
                         ConsoleDisplay.println(f"Net Income: ${income['tax']}; Tax: ${income['net_income']}!")
                     case 6:
-                        break
+                        sys.exit()
                 # choose what action to perform
 
     def check_args(self) -> None:
@@ -454,6 +464,37 @@ class Application:
         """
         return Payslip(self.selected_payslip)
 
+class PaySettings:
+    def __init__(self):
+        self.evening_rate_start = None
+        self.payslip_frequency = "weekly"
+
+        self.evening_rate_flag = None
+        self.saturday_rate_flag = None
+        self.sunday_rate_flag = None
+
+        self.event_name = 'NAB'
+
+    def allow_evening_rates(self):
+        return self.evening_rate_flag
+    
+    def allow_saturday_rates(self):
+        return self.saturday_rate_flag
+
+    def allow_sunday_rates(self):
+        return self.sunday_rate_flag
+    
+    def name(self):
+        return self.event_name
+    
+    def frequency(self):
+        frequency_table = {
+            "weekly": 1,
+            "fortnightly": 2,
+        }
+        return frequency_table[self.payslip_frequency]
+    
+    
 
 class ConsoleDisplay:
     """
