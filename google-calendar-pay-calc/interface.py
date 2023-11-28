@@ -211,9 +211,10 @@ def create_template():
 
 def open_settings():
     def pre_load_settings():
-        if PaySettings.settings_exist():
+        # if PaySettings.settings_exist():
+        if True:
             event_name = PaySettings.name()
-            payslip_frequency = PaySettings.frequency()
+            payslip_frequency = PaySettings.payslip_frequency
             base_pay = PaySettings.get_pay_table()['ordinary']
             return (event_name, payslip_frequency, base_pay)
         else:
@@ -224,7 +225,7 @@ def open_settings():
         event_name = event_name_entry.get()
         payslip_frequency = pay_frequency_entry.get()
         
-        base_rate = int(base_rate_entry.get())
+        base_rate = float(base_rate_entry.get())
         pay_table = pay_table = {
             'ordinary': base_rate,
             'sunday': 0,
