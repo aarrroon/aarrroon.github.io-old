@@ -121,7 +121,7 @@ def open_tax_window():
 
     def calculate_tax():
         gross_income = int(income_entry.get())
-        aft_tax_inc = FinancialUtilities.calculate_tax(gross_income, PaySettings().frequency())
+        aft_tax_inc = FinancialUtilities.calculate_tax(gross_income, PaySettings.frequency())
         display = f"Net Income: ${aft_tax_inc['net_income']}; Tax: ${aft_tax_inc['tax']}"
         income_display.configure(text=display)
 

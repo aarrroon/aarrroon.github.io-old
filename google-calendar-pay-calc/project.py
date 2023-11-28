@@ -43,14 +43,13 @@ class Payslip:
         :param end_date: the last day of a payslip, to distinguish it from other payslips.
         """
         # Create settings
-        self.settings = PaySettings()
         self.end_date = end_date
         # The shifts worked that is included in this payslip
         self.shifts = self.add_shifts()
         # The different hours and respective loading e.g. Saturday hours or ordinary hours
         self.hours = self.extract_hours()
         # The gross income and tax as a tupple
-        self.pay = FinancialUtilities.calculate_pay(self, self.settings.frequency())
+        self.pay = FinancialUtilities.calculate_pay(self, PaySettings.frequency())
         
         
 
@@ -130,7 +129,7 @@ class Payslip:
         Allocates shifts to the payslip by searching the calendar
         :return:
         """
-        frequency_mult = self.settings.frequency()
+        frequency_mult = PaySettings.frequency()
         period = timedelta(days=7*frequency_mult)
         end_date = datetime.fromisoformat(self.end_date)
         start_date = end_date + timedelta(days=1) - period
@@ -138,7 +137,7 @@ class Payslip:
         google_calendar = GoogleCalendar(credentials_path='credentials.json')
         events_in_week = google_calendar.get_events(start_date, end_date + timedelta(days=1), order_by='updated')
         # updates shift attribute in Payslip
-        return [event for event in events_in_week if event.summary == self.settings.name()]
+        return [event for event in events_in_week if event.summary == PaySettings.name()]
 
     def print_shifts(self) -> None:
         """
@@ -225,7 +224,6 @@ class FinancialUtilities:
         tax_withheld = ceil((a * (weekly_income + 0.99) - b) * frequency_mult)
         return {'tax': tax_withheld, 'net_income': round(income - tax_withheld, 2)}
 
-
 class Calendar:
     """
     Class representing a Calendar. Can list out appropriate payslip dates and finding the payslip in the current period.
@@ -235,8 +233,6 @@ class Calendar:
         """
         Constructor
         """
-        # Create settings
-        self.settings = PaySettings()
         # Google Calendar using the API
         self.google_calendar = GoogleCalendar(credentials_path='credentials.json')
         # List of significant payslips
@@ -249,7 +245,7 @@ class Calendar:
         """
         base = date.fromisoformat(base_date_temp)
         today = date.today()
-        frequency_mult = self.settings.frequency()
+        frequency_mult = PaySettings.frequency()
         # scaling the base to 1 payslip behind today
         while (today - base).days > (14 * frequency_mult):
             base += timedelta(days = 7 * frequency_mult)
@@ -375,7 +371,6 @@ class Calendar:
             return event
         return None
 
-
 class Application:
     """
     Encapsulates any interaction between the program and the user.
@@ -465,34 +460,44 @@ class Application:
         return Payslip(self.selected_payslip)
 
 class PaySettings:
-    def __init__(self):
-        self.evening_rate_start = None
-        self.payslip_frequency = "weekly"
+    _instance = None
 
-        self.evening_rate_flag = None
-        self.saturday_rate_flag = None
-        self.sunday_rate_flag = None
+    # Class variables
+    payslip_frequency = "weekly"
+    event_name = 'NAB'
 
-        self.event_name = 'NAB'
+    evening_rate_start = None
+    evening_rate_flag = None
+    saturday_rate_flag = None
+    sunday_rate_flag = None
 
-    def allow_evening_rates(self):
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(PaySettings, cls).__new__(cls)
+            # Initialization code goes here
+        return cls._instance
+
+    def evening_rates_allowed(self):
         return self.evening_rate_flag
     
-    def allow_saturday_rates(self):
+    def saturday_rates_allowed(self):
         return self.saturday_rate_flag
 
-    def allow_sunday_rates(self):
+    def sunday_rates_allowed(self):
         return self.sunday_rate_flag
     
-    def name(self):
-        return self.event_name
+    @classmethod
+    def name(cls):
+        return cls.event_name
     
-    def frequency(self):
+    @classmethod
+    def frequency(cls):
         frequency_table = {
             "weekly": 1,
             "fortnightly": 2,
+            "monthly": 4
         }
-        return frequency_table[self.payslip_frequency]
+        return frequency_table[cls.payslip_frequency]
     
     
 
