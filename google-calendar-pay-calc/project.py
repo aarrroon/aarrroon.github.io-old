@@ -355,7 +355,6 @@ class Calendar:
     @staticmethod
     def validate_shift(shift_string: str) -> Union[Event, None]:
         if match := re.search(r"^(\d{4})-(\d{2})-(\d{2}), (\d\d)(\d\d), (\d)$", shift_string):
-            print('Shift is valid')
             shift_year, shift_month, shift_day = int(match.group(1)), int(match.group(2)), int(match.group(3))
             shift_hour, shift_min, shift_length = int(match.group(4)), int(match.group(5)), int(match.group(6))
             start_time = datetime(shift_year, shift_month, shift_day, hour=shift_hour, minute=shift_min)
