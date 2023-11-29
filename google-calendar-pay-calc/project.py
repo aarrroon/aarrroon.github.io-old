@@ -226,6 +226,8 @@ class Calendar:
         """
         Constructor
         """
+        # Load settings
+        PaySettings.load_settings()
         # Google Calendar using the API
         self.google_calendar = GoogleCalendar(credentials_path='credentials.json')
         # List of significant payslips
@@ -233,6 +235,7 @@ class Calendar:
 
     def list_payslip_dates(self, base_date_temp = "2023-05-14") -> List[str]:
         """
+        List the last day of each pay cycle.
         :param: base_date_temp: the dates a fortnight from this
         :return:
         """
@@ -278,54 +281,41 @@ class Calendar:
         # TODO maybe add a check
         return Payslip(end_date)
 
-    def return_pay_event_id(self, specific_date: str = None) -> List[Tuple[str, str]]:
+    def update_payslip(self, payslip_index: Union[int, str]) -> List[Tuple[str, str]]:
         """
         Returns a list of Google Calendar event IDs as used by the API. By default, returns the ID of the previous,
         current and the next two payslips. If the parameter specific date is used, then it will provide a list with
         a singular date.
         :param specific_date: used if we want to return the Google Calendar event ID of a particular payslip
-        :return: list of event IDs pertaining to the 'IKEA PAY' event
+        :return: list of event IDs pertaining to the 'PAY' event
         """
-        start_date = date.today() - timedelta(days=14)
-        interval = timedelta(days=14 * 3)
-        end_date = start_date + interval
+        output = []
 
-        search_result = self.google_calendar.get_events(start_date, end_date, order_by='startTime', query='IKEA PAY',
-                                                 single_events=True)
+        payslip_dates = self.payslip_dates[0:7] if payslip_index == 'A' else [self.payslip_dates[int(payslip_index)]]
+        # loop through each payslip date
+        for date_string in payslip_dates:
+            paydate_obj = date.fromisoformat(date_string) + timedelta(days=3)
+            
+            # create updated payslip event name
+            payslip = Payslip(date_string)
+            event_name = f'Pay: ${payslip.pay['net_income']}'
 
-        # TODO check if we need this
-        id_list = None
-        if specific_date is None:
-            id_list = [((event_id.start - timedelta(days=3)).isoformat(), event_id.id) for event_id in search_result]
-        else:
-            id_list = [((event_id.start - timedelta(days=3)).isoformat(), event_id.id) for event_id in search_result if
-                       (event_id.start - timedelta(days=3)).isoformat() == specific_date]
-        return id_list
-
-    def update_paydate_gc(self, id_list: List[Tuple[str, str]]) -> None:
-        """
-        It updates the payslip events on Google Calendar based on the id_list provided as a parameter.
-        By default, it updates one paycheck ago, the current paycheck, and the next 2 paychecks, however
-        it may update only one specific payslip event depending on the return_pay_event_id.
-        :param: id_list: list of ID's to update in the Google Calendar
-        """
-        output = ""
-        for event in id_list:
-            target_pay_event = self.google_calendar.get_event(event[1])
-            target_payslip = (Payslip(event[0]))
-            target_pay = target_payslip.pay['net_income']
-            target_pay_event.summary = f'IKEA PAY - ${target_pay}'
-            self.google_calendar.update_event(target_pay_event)
-            output += f'Updated paydate on the {event[0]} to IKEA PAY - ${target_pay}!\n'
+            # search calendar for already made event 
+            search_result = list(self.google_calendar.get_events(paydate_obj, paydate_obj + timedelta(days=1), query='Pay'))
+            
+            # if there is no payslip event already
+            if len(search_result) == 0:
+                # create a payslip event
+                event = Event(event_name, start=paydate_obj, end=paydate_obj)
+                # add to google calendar
+                self.google_calendar.add_event(event)
+            # if there is payslip event already created + needs updating
+            elif search_result[0].summary != event_name: 
+                search_result[0].summary = event_name
+                self.google_calendar.update_event(search_result[0])
+            output.append(f'{paydate_obj.isoformat()} - {event_name}')
         return output
 
-    def update_payslip(self, payslip: Payslip):
-        if payslip is not None:
-            enddate = payslip.end_date
-        else:
-            enddate = None
-        id = self.return_pay_event_id(enddate)
-        return self.update_paydate_gc(id)
 
     def add_calendar_shifts(self, get_shift_to_add) -> str:
         """
@@ -375,7 +365,7 @@ class Application:
         self.google_calendar = calendar
         # The chosen payslip by the user
         self.selected_payslip = None
-        PaySettings.load_settings()
+        
 
     def obtain_args(self) -> argparse.Namespace:
         """
@@ -402,9 +392,11 @@ class Application:
             ui = ConsoleDisplay()
             while True:
                 action = ui.choose_action()
-                if action not in (3, 4, 5, 6):
+                if action not in (2, 3, 4, 6):
                     payslip = ui.choose_selected_payslip(calendar)
-
+                elif action == 2:
+                    ConsoleDisplay().display_payslips(calendar)
+                    payslip = input("Select payslip using their index or input 'A' to update all payslips \n")
                 match action:
                     # view details of a payslip
                     case 1:
@@ -412,14 +404,11 @@ class Application:
                         ConsoleDisplay.println(payslip.print_pay())
                     # update a payslip
                     case 2:
-                        calendar.update_payslip(payslip)
-                    # update last, current and next 2 payslips
-                    case 3:
-                        ConsoleDisplay.println(calendar.update_payslip(None))
+                        ConsoleDisplay.print_list(calendar.update_payslip(payslip))
                     # add shift to Google Calendar
-                    case 4:
+                    case 3:
                         calendar.add_calendar_shifts(ConsoleDisplay.get_shift_to_add)
-                    case 5:
+                    case 4:
                         gross_income = int(input("What is the fortnightly pay?\n$"))
                         income = FinancialUtilities.calculate_tax(gross_income)
                         ConsoleDisplay.println(f"Net Income: ${income['tax']}; Tax: ${income['net_income']}!")
@@ -454,15 +443,9 @@ class Application:
 
 class PaySettings:
     # Class variables
-    payslip_frequency = "weekly"
-    event_name = 'NAB'
-    pay_table = {
-            'ordinary': 34.58,
-            'sunday': 0,
-            'saturday': 0,
-            'evening': 41.50,
-            'publicHoliday': 86.25
-        }
+    payslip_frequency = None
+    event_name = None
+    pay_table = {}
 
     evening_rate_start = None
     evening_rate_flag = None
@@ -507,7 +490,7 @@ class PaySettings:
         with open('settings.yaml', 'r') as file:
             loaded_settings = yaml.safe_load(file)
             cls.payslip_frequency = loaded_settings['payslip_frequency']
-            cls.evening_name = loaded_settings['event_name']
+            cls.event_name = loaded_settings['event_name']
             for hourly_type in ('evening', 'ordinary', 'publicHoliday', 'saturday', 'sunday'):
                 cls.pay_table[hourly_type] = loaded_settings[hourly_type]
 
@@ -538,9 +521,8 @@ class ConsoleDisplay:
                 "Select what you want to do (e.g. 1) \n"
                 "1: View the shifts and details of a payslip \n"
                 "2: Update a payslip on the Google Calendar \n"
-                "3: Update the last, current and the next payslip \n"
-                "4: Add a shift to the Google Calendar \n"
-                "5: Calculate tax withheld of a fortnightly amount \n"
+                "3: Add a shift to the Google Calendar \n"
+                "4: Calculate tax withheld of a fortnightly amount \n"
                 "6: Exit \n"
             )
             try:
@@ -591,6 +573,10 @@ class ConsoleDisplay:
     @staticmethod
     def println(string: str) -> None:
         print(string)
+
+    def print_list(list: List[str]) -> None:
+        for s in list:
+            print(s)
 
 if __name__ == '__main__':
     """

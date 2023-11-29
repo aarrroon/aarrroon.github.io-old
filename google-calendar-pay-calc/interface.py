@@ -6,7 +6,6 @@ import customtkinter
 # Global Variable
 calendar = Calendar()
 
-
 # Update Google Calendar
 def update_googcal_ui(payslip):
     global console_display
@@ -245,6 +244,7 @@ def open_settings():
 
     # obtain previous settings if found
     event_name, payslip_frequency, base_pay = pre_load_settings()
+    print(pre_load_settings())
 
     # add text-fields
     event_name_label = customtkinter.CTkLabel(settings_window, text="Calendar Event Name", padx=5, pady=5)
@@ -291,6 +291,6 @@ if __name__ == '__main__':
     --pay or leave empty:
 
     """
-    app = Application(Calendar())
+    app = Application(calendar)
     create_template()
 
