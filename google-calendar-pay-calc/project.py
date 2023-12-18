@@ -2,14 +2,16 @@ import holidays
 import re
 import argparse
 import sys
-import os
+
 
 from gcsa.google_calendar import GoogleCalendar
 from gcsa.event import Event
 from typing import Union, List, Tuple, Dict
-from math import ceil
 from datetime import datetime, timedelta, date
-import yaml
+
+
+from utilities import FinancialUtilities
+from settings import PaySettings
 
 """
 External Packages:
@@ -159,64 +161,6 @@ class Payslip:
             result += f'{shift[0]}\n'
         return result
 
-class FinancialUtilities:
-    """
-    Class encapsulating static utility functions involving calculating pay and taxes.
-    """
-    @staticmethod
-    def calculate_pay(self, frequency_mult: int) -> dict[str, Union[int, float]]:
-        """
-        Calculates the total pay from the shifts worked in the fortnight. Calls on 'calculate_tax()' to
-        obtain pay after-tax.
-        :return: ['net_income': int, 'tax': int]
-        """
-        pay = PaySettings.get_pay_table()
-        total_income = pay['ordinary'] * self.hours['ordinary'] + \
-                       self.hours['sunday'] * pay['sunday'] + \
-                       self.hours['saturday'] * pay['saturday'] + \
-                       self.hours['evening'] * pay['evening'] + \
-                       self.hours['publicHoliday'] * pay['publicHoliday']
-        return FinancialUtilities.calculate_tax(total_income, frequency_mult)
-
-    @staticmethod
-    def calculate_tax(income: float, frequency_mult: int) -> Dict[str, Union[int ,float]]:
-        """
-        Calculates the tax withheld and income after tax
-        :param: income
-        :return: tuple where (tax withheld, income after tax)
-        """
-        # Australian Tax Table for 2022-2023
-        a, b = 0, 0
-        tax_table = {
-            359: [0, 0],
-            438: [0.19, 68.3462],
-            548: [0.29, 112.1942],
-            721: [0.2190, 68.3465],
-            865: [0.2190, 74.8369],
-            1282: [0.3477, 186.2119],
-            2307: [0.345, 182.7504]
-        }
-        weekly_income = income / frequency_mult
-
-        # calculating coefficients for different income brackets
-        if weekly_income < 359:
-            a, b = tax_table[359]
-        elif weekly_income < 438:
-            a, b = tax_table[438]
-        elif weekly_income < 548:
-            a, b = tax_table[548]
-        elif weekly_income < 721:
-            a, b = tax_table[721]
-        elif weekly_income < 865:
-            a, b = tax_table[865]
-        elif weekly_income < 1282:
-            a, b = tax_table[1282]
-        elif weekly_income < 2307:
-            a, b = tax_table[2307]
-        # tax withheld in a fortnight
-        tax_withheld = ceil((a * (weekly_income + 0.99) - b) * frequency_mult)
-        return {'tax': tax_withheld, 'net_income': round(income - tax_withheld, 2)}
-
 class Calendar:
     """
     Class representing a Calendar. Can list out appropriate payslip dates and finding the payslip in the current period.
@@ -291,14 +235,23 @@ class Calendar:
         """
         output = []
 
-        payslip_dates = self.payslip_dates[0:7] if payslip_index == 'A' else [self.payslip_dates[int(payslip_index)]]
+        if payslip_index.lower() == 'a':
+            payslip_dates = self.payslip_dates[0:7]  
+        elif payslip_index == '':
+            payslip_dates = [self.find_current_payslip_date()]
+        elif match := re.search(r"^((\d{4})-(\d{2})-(\d{2}))$", payslip_index):
+            payslip_dates = [match.group(1)]
+        else:
+            payslip_dates = [self.payslip_dates[int(payslip_index)]]
+        
         # loop through each payslip date
         for date_string in payslip_dates:
             paydate_obj = date.fromisoformat(date_string) + timedelta(days=3)
             
             # create updated payslip event name
             payslip = Payslip(date_string)
-            event_name = f'Pay: ${payslip.pay['net_income']}'
+            amount = "{:.2f}".format(payslip.pay['net_income'])
+            event_name = f'Pay: ${amount}'
 
             # search calendar for already made event 
             search_result = list(self.google_calendar.get_events(paydate_obj, paydate_obj + timedelta(days=1), query='Pay'))
@@ -313,7 +266,7 @@ class Calendar:
             elif search_result[0].summary != event_name: 
                 search_result[0].summary = event_name
                 self.google_calendar.update_event(search_result[0])
-            output.append(f'{paydate_obj.isoformat()} - {event_name}')
+            output.append(f'\n{paydate_obj.isoformat()} - {event_name}')
         return output
 
 
@@ -366,7 +319,6 @@ class Application:
         # The chosen payslip by the user
         self.selected_payslip = None
         
-
     def obtain_args(self) -> argparse.Namespace:
         """
         Obtains the arguments from the user.
@@ -409,9 +361,10 @@ class Application:
                     case 3:
                         calendar.add_calendar_shifts(ConsoleDisplay.get_shift_to_add)
                     case 4:
-                        gross_income = int(input("What is the fortnightly pay?\n$"))
-                        income = FinancialUtilities.calculate_tax(gross_income)
-                        ConsoleDisplay.println(f"Net Income: ${income['tax']}; Tax: ${income['net_income']}!")
+                        gross_income = float(input("What is the pay to calculate tax on?\n"))
+                        frequency = PaySettings.frequency()
+                        income = FinancialUtilities.calculate_tax(gross_income, frequency)
+                        ConsoleDisplay.println(f"Net Income: ${income['net_income']}; Tax: ${income['tax']}, HELP Debt: ${income['help_debt']}")
                     case 6:
                         sys.exit()
                 # choose what action to perform
@@ -440,68 +393,6 @@ class Application:
         :return: selected payslip
         """
         return Payslip(self.selected_payslip)
-
-class PaySettings:
-    # Class variables
-    payslip_frequency = None
-    event_name = None
-    pay_table = {}
-
-    evening_rate_start = None
-    evening_rate_flag = None
-    saturday_rate_flag = None
-    sunday_rate_flag = None
-
-    # def evening_rates_allowed(self):
-    #     return self.evening_rate_flag
-    
-    # def saturday_rates_allowed(self):
-    #     return self.saturday_rate_flag
-
-    # def sunday_rates_allowed(self):
-    #     return self.sunday_rate_flag
-    
-    @classmethod
-    def name(cls):
-        return cls.event_name
-    
-    @classmethod
-    def frequency(cls):
-        frequency_table = {
-            "weekly": 1,
-            "fortnightly": 2,
-            "monthly": 4
-        }
-        return frequency_table[cls.payslip_frequency]
-    
-    @classmethod
-    def save_settings(cls, event_name: str, payslip_frequency: str, pay_table: Dict[str, int]):
-        name_data = {'event_name': event_name}
-        frequency_data = {'payslip_frequency': payslip_frequency}
-        # save to yaml file
-        with open('settings.yaml', 'w') as file:
-            yaml.dump(name_data, file)
-            yaml.dump(pay_table, file)
-            yaml.dump(frequency_data, file)
-        cls.load_settings()
-    
-    @classmethod
-    def load_settings(cls):
-        with open('settings.yaml', 'r') as file:
-            loaded_settings = yaml.safe_load(file)
-            cls.payslip_frequency = loaded_settings['payslip_frequency']
-            cls.event_name = loaded_settings['event_name']
-            for hourly_type in ('evening', 'ordinary', 'publicHoliday', 'saturday', 'sunday'):
-                cls.pay_table[hourly_type] = loaded_settings[hourly_type]
-
-    @classmethod
-    def get_pay_table(cls):
-        return cls.pay_table
-    
-    @classmethod
-    def settings_exist(cls):
-        file_name = 'settings'
-        return os.path.isfile(file_name) and file_name.lower().endswith('.yaml')
 
 
 

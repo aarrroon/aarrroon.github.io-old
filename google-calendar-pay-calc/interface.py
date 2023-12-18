@@ -10,11 +10,12 @@ calendar = Calendar()
 def update_googcal_ui(payslip):
     global console_display
     if payslip:
-        output = calendar.update_payslip(Payslip(payslip))
+        output = calendar.update_payslip(payslip)
     else:
         # choose the payslip
         # TODO call another function
         output = calendar.update_payslip(None)
+    output = '\n'.join(output)
     console_display.configure(text=output)
 
 
@@ -80,14 +81,14 @@ def add_shifts_to_gc_ui():
     finish_btn.grid(row=4, column=2, padx=10, pady=10)
 
 
-def choose_payslip(function_to_do):
+def choose_payslip(function_to_do, select_all_flag=False):
     payslip_window = Toplevel(width=50)
-    payslip_window.geometry("400x550")
+    payslip_window.geometry("400x600")
     payslip_window.iconbitmap('icon.ico')
     chosen_payslip_index = IntVar()
     payslip_list = calendar.list_payslip_dates()
 
-    # obtaining current payslip
+    # obtaining current payslip 
     current_payslip = calendar.find_current_payslip_date()
 
     # displaying options
@@ -98,6 +99,15 @@ def choose_payslip(function_to_do):
         radiobutton = customtkinter.CTkRadioButton(payslip_window, text=payslip + current, variable=chosen_payslip_index, value=index)
         radiobutton.grid(row=index, column=0, sticky='w', padx=10, pady=5)
 
+    length = len(payslip_list)
+    if select_all_flag:
+        radiobutton = customtkinter.CTkRadioButton(payslip_window, text="All payslips", variable=chosen_payslip_index, value=length)
+        radiobutton.grid(row=length, column=0, sticky='w', padx=10, pady=5)
+        
+        # add additional option to select all payslips
+        payslip_list.append('A')
+
+    
     def use_payslip():
         payslip_window.destroy()
         chosen_payslip = payslip_list[chosen_payslip_index.get()]
@@ -105,7 +115,7 @@ def choose_payslip(function_to_do):
 
     # creating submit button
     choose_btn = customtkinter.CTkButton(payslip_window, text="Choose Payslip", command=use_payslip)
-    choose_btn.grid(row=len(payslip_list), padx=5, pady=5)
+    choose_btn.grid(row=length + 1, padx=5, pady=5)
 
 
 def open_tax_window():
@@ -119,7 +129,7 @@ def open_tax_window():
     income_entry = customtkinter.CTkEntry(tax_window, width=100)
 
     def calculate_tax():
-        gross_income = int(income_entry.get())
+        gross_income = float(income_entry.get())
         aft_tax_inc = FinancialUtilities.calculate_tax(gross_income, PaySettings.frequency())
         display = f"Net Income: ${aft_tax_inc['net_income']}; Tax: ${aft_tax_inc['tax']}"
         income_display.configure(text=display)
@@ -177,9 +187,7 @@ def create_template():
     # buttons
     button1 = customtkinter.CTkButton(root, text="View the shifts and details of a payslip", command=lambda: choose_payslip(view_details))
     button2 = customtkinter.CTkButton(root, text="Update a payslip on the Google Calendar", 
-                     command=lambda: choose_payslip(update_googcal_ui))
-    button3 = customtkinter.CTkButton(root, text="Update the last, current and the next 2 payslips", 
-                     command=lambda: update_googcal_ui(None))
+                     command=lambda: choose_payslip(update_googcal_ui, True))
     button4 = customtkinter.CTkButton(root, text="Add a shift to the Google Calendar",  command=add_shifts_to_gc_ui)
     button5 = customtkinter.CTkButton(root, text="Calculate Tax Withheld",  command=open_tax_window)
     button6 = customtkinter.CTkButton(root, text="Exit",  command=root.destroy)
@@ -197,7 +205,6 @@ def create_template():
     header.grid(row=0, column=0, columnspan=2)
     button1.grid(row=1, column=0, sticky=N + S + E + W, padx=20, pady=5)
     button2.grid(row=2, column=0, sticky=N + S + E + W, padx=20, pady=5)
-    button3.grid(row=3, column=0, sticky=N + S + E + W, padx=20, pady=5)
     button4.grid(row=1, column=1, sticky=N + S + E + W, padx=20, pady=5)
     button5.grid(row=2, column=1, sticky=N + S + E + W, padx=20, pady=5)
     button7.grid(row=3, column=1, sticky=N + S + E + W, padx=20, pady=5)
