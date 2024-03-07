@@ -16,7 +16,7 @@ body {
   justify-content: center;
   align-items: center;
   border-bottom: 1px solid #ffd900a0; /* Yellow color */
-  font-size: 1.1em;
+  font-size: em;
   letter-spacing: 0.4em;
   box-shadow: none; /* Turn off the box shadow */
 

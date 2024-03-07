@@ -1,0 +1,12 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+/google-calendar-pay-calc/.idea/
+/google-calendar-pay-calc/credentials.json
+/google-calendar-pay-calc/token.pickle
+google-calendar-pay-calc/token.pickle
+google-calendar-pay-calc/credentials.json
+google-calendar-pay-calc/__pycache__/settings.cpython-310.pyc
+google-calendar-pay-calc/__pycache__/utilities.cpython-310.pyc
+google-calendar-pay-calc/__pycache__/project.cpython-310.pyc
+google-calendar-pay-calc/token.pickle
