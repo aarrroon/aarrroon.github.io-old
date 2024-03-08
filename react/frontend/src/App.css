@@ -19,7 +19,12 @@ body {
   font-size: em;
   letter-spacing: 0.4em;
   box-shadow: none; /* Turn off the box shadow */
+  
 
+}
+
+.nav {
+  gap: 20000px;
 }
 
 .logo {
@@ -160,4 +165,3 @@ body {
   background-position: 100% 100%; /*OR bottom right*/
   background-size: 100% 2px;
 }
-
