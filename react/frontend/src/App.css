@@ -9,9 +9,9 @@ body {
   /* border: 1px solid #FFD700; */
 }
 
+/* Header */
 .header {
-  color: #fff;
-  padding: 4vh;
+  padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,36 +19,60 @@ body {
   font-size: em;
   letter-spacing: 0.4em;
   box-shadow: none; /* Turn off the box shadow */
-  
+  background-image: url('./home1.jpg');
+  background-size: cover;
+  background-position: center;
 
 }
 
-.nav {
-  gap: 20000px;
+.header-link {
+  margin: 3.5vh 30px;
+  padding: 10px 0;
+  color: #fff;
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
 }
+
+/* Underline Header */
+.header-link::before,
+.header-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0%;
+  height: 2px;
+  background-image: linear-gradient(#ffd900a0, #ffd900a0);
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  transition: width 0.3s, background-size 0.3s, background-position 0s 0.3s;
+}
+
+.header-link::before {
+  bottom: -3px; /* Adjust the distance between lines */
+
+}
+
+.header-link::after {
+  transition-delay: 0.1s; /* Add a delay to the transition of the bottom line */
+  bottom: -6px; /* Adjust the distance between lines */
+}
+
+.header-link:hover::before,
+.header-link:hover::after {
+  width: 100%;
+  background-size: 100% 1px;
+}
+
+
 
 .logo {
   font-weight: bold;
   position:absolute;
   left: 2vh;
   background-image: 'home-icon.jpg';
-}
-
-.nav ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-}
-
-.nav ul li {
-  margin-right: 8vw;
-}
-
-.nav ul li a {
-  color: #fff;
-  text-decoration: none;
-  padding-bottom: 0px;
 }
 
 #header-hero {
@@ -149,19 +173,3 @@ body {
   right: 10vh; /* Distance from the right edge */
 }
 
-/* Underline Header */
-.un {
-  display: inline-block;
-  background-image: linear-gradient(#ffd900a0 0 0);
-  background-position: 0 100%; /*OR bottom left*/
-  background-size: 0% 1px;
-  background-repeat: no-repeat;
-  transition:
-    background-size 0.3s,
-    background-position 0s 0.3s; /*change after the size immediately*/
-}
-
-.un:hover {
-  background-position: 100% 100%; /*OR bottom right*/
-  background-size: 100% 2px;
-}
